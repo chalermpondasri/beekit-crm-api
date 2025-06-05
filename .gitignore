@@ -1,8 +1,7 @@
 # compiled output
-/dist
+/source/dist
 /node_modules
-/source/node_modules
-/.pnpm-store
+/build
 
 # Logs
 logs
@@ -31,22 +30,27 @@ lerna-debug.log*
 
 # IDE - VSCode
 .vscode/*
-.vscode/settings.json
+!.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-# Environment variable
+
+# dotenv environment variable files
 .env
-*.env
-source/.env
-.flaskenv*
-!.env.project
-!.env.vault
-.eslintcache
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
 
-/tmp
-/source/dist/
+# temp directory
+.temp
+.tmp
 
-source/coverage
-source/node_modules
-tmp.json
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Diagnostic reports (https://nodejs.org/api/report.html)
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
