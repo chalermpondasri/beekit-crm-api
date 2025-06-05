@@ -1,0 +1,25 @@
+NAME: miniapps-ticket20-api
+
+RUN_UNIT_TEST: true
+IGNORE_UNIT_TEST_ERROR: true
+TEST_IMAGE_NAME: miniapps-ticket20-api
+TEST_IMAGE_TAG: testimage-latest
+
+# SONAR SCAN
+RUN_SONAR: true
+IGNORE_SONAR_QUALITY: true
+SONAR_PROJECT_KEY: miniapps-ticket20-api
+SONAR_HOST_URL: https://sonar.sv-dga.com
+SONAR_SCAN_SOURCE_CODE_TARGET: .
+
+# Build spec
+IMAGE_NAME: miniapps-ticket20-api
+
+# AWS
+AWS_REGION: ap-southeast-7
+AWS_ROLE_TO_ASSUME: arn:aws:iam::877502627026:role/github
+
+# Ingress
+DOMAIN: superapps-th.cloud
+SUB_DOMAIN: miniapps-dev
+PATH_PATTERN: /cp/dep/ticket20/api
