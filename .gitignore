@@ -47,4 +47,3 @@ source/.env
 .eslintcache
 
 /tmp
-/source/.env

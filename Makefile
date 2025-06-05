@@ -1,4 +1,4 @@
-NAME := miniapps-disloan-api
+NAME := miniapps-ticket20-api
 REGISTRY := 877502627026.dkr.ecr.ap-southeast-7.amazonaws.com
 
 build-baseimage:

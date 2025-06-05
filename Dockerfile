@@ -17,9 +17,8 @@ COPY source/package-lock.json .
 
 COPY source/tsconfig.json .
 COPY source/tsconfig.build.json .
-
 COPY source/src ./src
-COPY source/static ./static
+
 RUN npm ci
 
 RUN npm run build
@@ -34,7 +33,6 @@ COPY source/package.json source/package-lock.json ./
 
 COPY --from=build /build/dist ./dist
 COPY --from=build /build/node_modules ./node_modules
-COPY --from=build /build/static ./static
 
 RUN npm ci --omit dev && \
     npm cache clean --force
