@@ -3,6 +3,7 @@
 /node_modules
 /source/node_modules
 /.pnpm-store
+/source/dist/
 
 # Logs
 logs
@@ -18,6 +19,7 @@ lerna-debug.log*
 
 # Tests
 /coverage
+/source/coverage
 /.nyc_output
 
 # IDEs and editors
@@ -45,7 +47,3 @@ source/.env
 .eslintcache
 
 /tmp
-/source/dist/
-
-source/coverage
-source/node_modules
