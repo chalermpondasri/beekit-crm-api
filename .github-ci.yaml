@@ -22,4 +22,4 @@ AWS_ROLE_TO_ASSUME: arn:aws:iam::877502627026:role/github
 # Ingress
 DOMAIN: superapps-th.cloud
 SUB_DOMAIN: miniapps-dev
-PATH_PATTERN: /cp/dep/ticket20/api
+PATH_PATTERN: /cp/transit/ticket20/api
