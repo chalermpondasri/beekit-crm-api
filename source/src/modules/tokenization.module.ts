@@ -3,12 +3,10 @@ import {
     accessTokenSignerProvider,
     refreshTokenSignerProvider,
 } from '@providers/signer.provider'
-import { ApplicationConfigModule } from '@modules/application-config.module'
 import { tokenizationServiceProvider } from '@providers/tokenization-service.provider'
 
 @Module({
     imports: [
-        ApplicationConfigModule,
     ],
     providers: [
         accessTokenSignerProvider,

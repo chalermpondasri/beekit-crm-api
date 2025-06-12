@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common'
-import { ApplicationConfigModule } from '@modules/application-config.module'
 import { LoggerModule } from '@modules/logger.module'
 import { TokenizationModule } from '@modules/tokenization.module'
 import { AuthController } from '@controllers/auth.controller'
@@ -11,7 +10,6 @@ import {
 
 @Module({
     imports: [
-        ApplicationConfigModule,
         TokenizationModule,
         LoggerModule,
     ],

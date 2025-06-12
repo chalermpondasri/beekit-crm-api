@@ -1,3 +1,4 @@
+import dotenv from 'dotenv'
 import {
     InternalServerErrorException,
     Provider,
@@ -8,6 +9,7 @@ import { validateSync } from 'class-validator'
 import { ProviderName } from '@constants/provider-name.enum'
 import { EnvironmentConfig } from '@common/models/environment-config.model'
 
+dotenv.config()
 export const environmentConfigProvider: Provider = {
     provide: ProviderName.ENVIRONMENT_CONFIG,
     useFactory: () => {
