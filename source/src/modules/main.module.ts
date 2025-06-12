@@ -1,15 +1,15 @@
 import { Module } from '@nestjs/common'
-import { ApplicationConfigModule } from './application-config.module'
-import { HealthcheckController } from '@controllers/healthcheck.controller'
-import { LoggerModule } from '@modules/logger.module'
+import { CoreModule } from '../core/core.module'
+import { HealthcheckModule } from '@domains/healthcheck/healthcheck.module'
+import { AuthModule } from '@domains/auth/auth.module'
 
 @Module({
     imports: [
-        ApplicationConfigModule,
-        LoggerModule,
+        CoreModule,
+        HealthcheckModule,
+        AuthModule,
     ],
     controllers: [
-        HealthcheckController,
     ],
     exports: [],
 })
