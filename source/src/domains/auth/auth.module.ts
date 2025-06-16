@@ -17,12 +17,13 @@ import { AdapterModule } from '../../shared/adapters/adapter.module'
         AuthController,
     ],
     providers: [
+        authenticationServiceProvider,
         authenticationUseCaseProvider,
         createJwtUseCaseProvider,
-        authenticationServiceProvider,
     ],
     exports: [
-        authenticationServiceProvider,
+        authenticationUseCaseProvider,
+        createJwtUseCaseProvider,
     ],
 })
 export class AuthModule {

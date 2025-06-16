@@ -5,6 +5,7 @@ import {
 import { environmentConfigProvider } from './providers/config.provider'
 import { errorFactoryServiceProvider } from './providers/error-factory.provider'
 import { LoggerModule } from './logger.module'
+import { requestContextServiceProvider } from './providers/request-context-service.provider'
 
 @Global()
 @Module({
@@ -12,10 +13,12 @@ import { LoggerModule } from './logger.module'
         LoggerModule,
     ],
     providers: [
+        requestContextServiceProvider,
         environmentConfigProvider,
         errorFactoryServiceProvider,
     ],
     exports: [
+        requestContextServiceProvider,
         environmentConfigProvider,
         errorFactoryServiceProvider,
     ],
