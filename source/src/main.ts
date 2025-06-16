@@ -1,8 +1,7 @@
 import { MainModule } from '@modules/main.module'
 import { NestFactory } from '@nestjs/core'
-import { GlobalExceptionFilter } from './core/filters/global-exception.filter'
-import { EnvironmentConfig } from './core/models/environment-config.model'
-import { ProviderName } from './core/constants/provider-name.enum'
+import { EnvironmentConfig } from '@core/models/environment-config.model'
+import { ProviderName } from '@core/constants/provider-name.enum'
 import {
     PipeTransform,
     ValidationPipe,
@@ -12,7 +11,7 @@ import {
     SwaggerModule,
 } from '@nestjs/swagger'
 import { apiReference } from '@scalar/nestjs-api-reference'
-import { ErrorDto } from './core/models/error.model'
+import { ErrorDto } from '@core/models/error.model'
 import { ILoggerService } from '@domains/auth/interfaces/logger.service.interface'
 
 (async function () {
@@ -26,7 +25,6 @@ import { ILoggerService } from '@domains/auth/interfaces/logger.service.interfac
     const envConfig: EnvironmentConfig = app.get(ProviderName.ENVIRONMENT_CONFIG)
     const logger = await app.resolve<ILoggerService>(ProviderName.LOGGER_SERVICE)
 
-    app.useGlobalFilters(new GlobalExceptionFilter(logger))
     app.useLogger(logger)
 
     const nestValidationPipes: PipeTransform[] = [

@@ -6,7 +6,7 @@ import {
     authenticationUseCaseProvider,
     createJwtUseCaseProvider,
 } from '@domains/auth/providers/use-case.provider'
-import { AdapterModule } from '../../shared/adapters/adapter.module'
+import { AdapterModule } from '@shared/adapters/adapter.module'
 
 @Module({
     imports: [
@@ -27,6 +27,4 @@ import { AdapterModule } from '../../shared/adapters/adapter.module'
     ],
 })
 export class AuthModule {
-
-
 }

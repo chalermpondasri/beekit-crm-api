@@ -12,16 +12,11 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "paths": {
-      "@common/*": ["src/common/*"],
-      "@constants/*": ["src/constants/*"],
-      "@providers/*": ["src/providers/*"],
-      "@utils/*": ["src/utils/*"],
-      "@repositories/*": ["src/repositories/*"],
-      "@adapters/*": ["src/adapters/*"],
+      "@core/*": ["src/core/*"],
       "@domains/*": ["src/domains/*"],
-      "@controllers/*": ["src/controllers/*"],
       "@modules/*": ["src/modules/*"],
-      "@decorators/*": ["src/decorators/*"]
+      "@shared/*": ["src/shared/*"],
+      "@utils/*": ["src/utils/*"]
     },
     "incremental": true,
     "strict": true,

@@ -10,7 +10,7 @@ import { plainToInstance } from 'class-transformer'
 import {
     IEGovAdapter,
     IVerifyMTokenRequest,
-} from '../../../shared/adapters/egov/interfaces/egov.interface'
+} from '@shared/adapters/egov/interfaces/egov.interface'
 
 export class AuthenticationUseCase implements IAuthenticateUserUseCase {
     public constructor(

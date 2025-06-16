@@ -6,15 +6,21 @@ import {
     HttpStatus,
     Inject,
 } from '@nestjs/common'
-import { ErrorModel } from '../models/error.model'
+import {
+    ErrorDto,
+    ErrorModel,
+} from '../models/error.model'
 import { ILoggerService } from '@domains/auth/interfaces/logger.service.interface'
 import { ProviderName } from '../constants/provider-name.enum'
+import { EnvironmentConfig } from '@core/models/environment-config.model'
 
 @Catch(Error)
 export class GlobalExceptionFilter implements ExceptionFilter {
     public constructor(
         @Inject(ProviderName.LOGGER_SERVICE)
-        private readonly _logger: ILoggerService
+        private readonly _logger: ILoggerService,
+        @Inject(ProviderName.ENVIRONMENT_CONFIG)
+        private readonly _envConfig: EnvironmentConfig,
     ) {
         this._logger.setContext(GlobalExceptionFilter.name)
     }
@@ -25,11 +31,13 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         const request = context.getRequest()
 
         if (exception instanceof ErrorModel) {
-
             this._logger.error(`[${exception.error.code}] ${exception.message}`, exception.stack )
-
             return response.status(exception.statusCode).json(exception)
         }
+
+        const errorObject = !this._envConfig.isProduction() ? {
+            response: exception instanceof HttpException ? (exception.getResponse()) : null,
+        } : {}
 
         const status =
             exception instanceof HttpException
@@ -46,16 +54,22 @@ export class GlobalExceptionFilter implements ExceptionFilter {
             exception?.stack,
         )
 
-        return response.status(status).json({
+        const errorDto: ErrorDto = {
             statusCode: status,
             timestamp: new Date().toISOString(),
-            path: request.url,
+
             error: {
-                code: `${status}`,
+                code: <any>`${status}`,
+                title: 'Unexpected Error',
                 message: message,
             },
-            message: 'An unexpected error occurred',
-        })
+            errorObject: {
+                path: request.url,
+                ...errorObject,
+            }
+        }
+
+        return response.status(status).json(errorDto)
 
     }
 }

@@ -12,6 +12,10 @@ export class EnvironmentConfig {
     @IsNotEmpty()
     public readonly APP_ENV: string
 
+    public isProduction() {
+        return this.APP_ENV === 'production'
+    }
+
     @IsNotEmpty()
     public readonly APP_NAME: string
 

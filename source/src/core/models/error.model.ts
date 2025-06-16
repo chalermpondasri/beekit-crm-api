@@ -10,7 +10,7 @@ interface IErrorDetails {
     message: string
 }
 
-export class ErrorModel extends Error{
+export class ErrorModel extends Error {
     public constructor(
         public statusCode: number,
         public error: IErrorDetails,
