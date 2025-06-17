@@ -3,4 +3,7 @@ export interface IRequestContextService {
     getPsnId(): string
     getUserId(): string
     getFullName(): string
+    getRequestId(): string
+    getTraceId(): string
+    getTimestamp(): number
 }

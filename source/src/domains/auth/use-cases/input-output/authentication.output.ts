@@ -8,4 +8,5 @@ export class AuthenticationOutput {
     public mobile: string
     public email: string
     public notification: boolean
+    public traceId: string
 }

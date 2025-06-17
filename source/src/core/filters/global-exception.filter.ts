@@ -10,58 +10,76 @@ import {
     ErrorDto,
     ErrorModel,
 } from '../models/error.model'
-import { ILoggerService } from '@domains/auth/interfaces/logger.service.interface'
+import { ILoggerService } from '@core/interfaces/logger.service.interface'
 import { ProviderName } from '../constants/provider-name.enum'
 import { EnvironmentConfig } from '@core/models/environment-config.model'
+import { IAccessLoggerService } from '@core/interfaces/access-logger.service.interface'
+import { IRequestContextService } from '@core/interfaces/request-context.service.interface'
+import {
+    Request,
+    Response,
+} from 'express'
 
-@Catch(Error)
+@Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
     public constructor(
-        @Inject(ProviderName.LOGGER_SERVICE)
         private readonly _logger: ILoggerService,
-        @Inject(ProviderName.ENVIRONMENT_CONFIG)
         private readonly _envConfig: EnvironmentConfig,
+        private readonly _accessLogger: IAccessLoggerService,
+        private readonly _requestContextService: IRequestContextService,
     ) {
         this._logger.setContext(GlobalExceptionFilter.name)
     }
 
     public catch(exception: Error, host: ArgumentsHost): any {
         const context = host.switchToHttp()
-        const response = context.getResponse()
-        const request = context.getRequest()
+        const response = context.getResponse() as Response
+        const request = context.getRequest() as Request
 
-        if (exception instanceof ErrorModel) {
-            this._logger.error(`[${exception.error.code}] ${exception.message}`, exception.stack )
-            return response.status(exception.statusCode).json(exception)
+
+
+        let statusCode: number = 500
+        let message = 'Internal server error'
+        let title = 'Internal server error'
+        let domainErrorCode = String(statusCode)
+        if (exception instanceof HttpException) {
+            statusCode = exception.getStatus()
+            message = exception.message
+            domainErrorCode = String(statusCode)
+        } else if (exception instanceof ErrorModel) {
+            statusCode = exception.statusCode
+            title = exception.error.title
+            message = exception.error.message
+            domainErrorCode = exception.error.code
+
         }
+
+        this._accessLogger.log({
+            requestId: this._requestContextService.getRequestId(),
+            method: request.method,
+            url: request.url,
+            traceId: this._requestContextService.getTraceId(),
+            userAgent: request.headers['user-agent'],
+            statusCode: statusCode,
+            responseTime: Date.now() - this._requestContextService.getTimestamp(),
+            timestamp: new Date(this._requestContextService.getTimestamp()),
+            error: exception,
+            queryParams: request.query,
+        })
+        console.log( this._requestContextService.getRequestId(),this._requestContextService.getTimestamp())
 
         const errorObject = !this._envConfig.isProduction() ? {
             response: exception instanceof HttpException ? (exception.getResponse()) : null,
         } : {}
 
-        const status =
-            exception instanceof HttpException
-                ? exception.getStatus()
-                : HttpStatus.INTERNAL_SERVER_ERROR
-
-        const message =
-            exception instanceof HttpException
-                ? exception.message
-                : 'Internal server error'
-
-        this._logger.error(
-            `[${status}] ${message} - ${request.method} ${request.url}`,
-            exception?.stack,
-        )
-
         const errorDto: ErrorDto = {
-            statusCode: status,
+            statusCode: statusCode,
             timestamp: new Date().toISOString(),
 
             error: {
-                code: <any>`${status}`,
-                title: 'Unexpected Error',
-                message: message,
+                code: <any>`${domainErrorCode}`,
+                title,
+                message,
             },
             errorObject: {
                 path: request.url,
@@ -69,7 +87,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
             }
         }
 
-        return response.status(status).json(errorDto)
+        return response.setHeader('X-Request-Id', this._requestContextService.getRequestId()).status(statusCode).json(errorDto)
 
     }
 }

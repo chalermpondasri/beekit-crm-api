@@ -3,6 +3,7 @@ import {
     IsNotEmpty,
     IsNumber,
     IsOptional,
+    IsUUID,
 } from 'class-validator'
 import { Transform } from 'class-transformer'
 import { IsRSAKey } from '../decorators/validators/is-rsa-key.decorator'
@@ -18,6 +19,9 @@ export class EnvironmentConfig {
 
     @IsNotEmpty()
     public readonly APP_NAME: string
+
+    @IsNotEmpty()
+    public readonly APP_ID: string
 
     @Transform(({ value }) =>Number(value))
     @IsNumber()

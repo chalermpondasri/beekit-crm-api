@@ -2,6 +2,7 @@ import dotenv from 'dotenv'
 import {
     InternalServerErrorException,
     Provider,
+    Scope,
 } from '@nestjs/common'
 import { plainToInstance } from 'class-transformer'
 import * as process from 'node:process'
@@ -12,6 +13,7 @@ import { EnvironmentConfig } from '../models/environment-config.model'
 dotenv.config()
 export const environmentConfigProvider: Provider = {
     provide: ProviderName.ENVIRONMENT_CONFIG,
+    scope: Scope.DEFAULT,
     useFactory: () => {
         const env =  plainToInstance(EnvironmentConfig, process.env)
         const errors = validateSync(env)

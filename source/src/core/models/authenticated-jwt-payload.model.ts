@@ -24,4 +24,6 @@ export class AuthenticatedJwtPayload {
     public mobile: string
 
     public email: string
+
+    public traceId: string
 }

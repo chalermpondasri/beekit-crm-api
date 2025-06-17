@@ -2,11 +2,11 @@ import {
     Provider,
     Scope,
 } from '@nestjs/common'
-import { ProviderName } from '../../core/constants/provider-name.enum'
+import { ProviderName } from '@core/constants/provider-name.enum'
 import axios, { AxiosInstance } from 'axios'
 import http from 'http'
-import { EnvironmentConfig } from '../../core/models/environment-config.model'
-import { ILoggerService } from '@domains/auth/interfaces/logger.service.interface'
+import { EnvironmentConfig } from '@core/models/environment-config.model'
+import { ILoggerService } from '@core/interfaces/logger.service.interface'
 import { EGovAdapter } from './egov/egov.adapter'
 
 export const httpClientProvider: Provider = {

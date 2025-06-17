@@ -13,10 +13,9 @@ import {
     IVerifyMTokenRequest,
     IVerifyMTokenResponse,
 } from './interfaces/egov.interface'
-import { ILoggerService } from '@domains/auth/interfaces/logger.service.interface'
+import { ILoggerService } from '@core/interfaces/logger.service.interface'
 
 export class EGovAdapter implements IEGovAdapter {
-
 
     public constructor(
         private readonly _httpClient: AxiosInstance,

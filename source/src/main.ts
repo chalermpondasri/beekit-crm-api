@@ -1,5 +1,8 @@
 import { MainModule } from '@modules/main.module'
-import { NestFactory } from '@nestjs/core'
+import {
+    APP_FILTER,
+    NestFactory,
+} from '@nestjs/core'
 import { EnvironmentConfig } from '@core/models/environment-config.model'
 import { ProviderName } from '@core/constants/provider-name.enum'
 import {
@@ -12,7 +15,8 @@ import {
 } from '@nestjs/swagger'
 import { apiReference } from '@scalar/nestjs-api-reference'
 import { ErrorDto } from '@core/models/error.model'
-import { ILoggerService } from '@domains/auth/interfaces/logger.service.interface'
+import { ILoggerService } from '@core/interfaces/logger.service.interface'
+import { GlobalExceptionFilter } from '@core/filters/global-exception.filter'
 
 (async function () {
     const app = await NestFactory.create(MainModule, {
@@ -24,6 +28,9 @@ import { ILoggerService } from '@domains/auth/interfaces/logger.service.interfac
 
     const envConfig: EnvironmentConfig = app.get(ProviderName.ENVIRONMENT_CONFIG)
     const logger = await app.resolve<ILoggerService>(ProviderName.LOGGER_SERVICE)
+    const coreFilter = await app.resolve('CORE_FILTER');
+
+    app.useGlobalFilters(coreFilter)
 
     app.useLogger(logger)
 

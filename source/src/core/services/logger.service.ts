@@ -1,4 +1,4 @@
-import { ILoggerService } from '@domains/auth/interfaces/logger.service.interface'
+import { ILoggerService } from '@core/interfaces/logger.service.interface'
 import winston, { LogEntry } from 'winston'
 import * as os from 'node:os'
 import { LogLevel } from '@nestjs/common'
@@ -8,8 +8,10 @@ export class WinstonConsoleLogger implements ILoggerService {
     private readonly _logger: winston.Logger
     private _context: string = null
 
-    public constructor(logOutput: 'console' | 'json') {
-
+    public constructor(
+        logOutput: 'console' | 'json',
+        args: object = {},
+    ) {
         this._hostInfo = {
             hostName: os.hostname(),
         }
@@ -35,8 +37,8 @@ export class WinstonConsoleLogger implements ILoggerService {
                         const {timestamp, level, message, ...args} = info
                         const ctx = info.context || this._context || 'APP'
 
-                        const {trace}= args
-                        const stackTrace = ( <any> trace)?._stacktrace as string[] || []
+                        const {trace} = args
+                        const stackTrace = (<any>trace)?._stacktrace as string[] || []
                         return `${timestamp} ${level} [${ctx}]: ${message} ${(trace ? '\n' + stackTrace?.join('\n') : '')}`
                     }),
                 )
@@ -44,6 +46,7 @@ export class WinstonConsoleLogger implements ILoggerService {
         }
 
         this._logger = winston.createLogger({
+            defaultMeta: args,
             format: logFormat,
             transports: [
                 new winston.transports.Console({}),
@@ -77,30 +80,36 @@ export class WinstonConsoleLogger implements ILoggerService {
         }
     }
 
-    public error(message: any, trace?: string, context?: string): any {
-        this._logger.log(this._buildMessage(message, 'error', context, trace?.split('\n')))
+    public error(message: any, traceOrData?: string | Record<any, any>, context?: string): any {
+        if (typeof traceOrData === 'string') {
+            return this._logger.log(this._buildMessage(message, 'error', context, traceOrData?.split('\n')))
+        }
+        return this._logger.log(this._buildMessage(message, 'error', context, traceOrData))
     }
 
     public warn(message: any, context?: string): any {
         this._logger.log(this._buildMessage(message, 'warn', context))
     }
 
-    public log(message: any, context?: string): any {
-        this._logger.log(this._buildMessage(message, 'log', context))
+    public log(message: any, args?: string | Record<any, any>, args2?: Record<any, any>): any {
+        if (typeof args === 'string') {
+            return this._logger.log(this._buildMessage(message, 'log', args, args2))
+        }
+        return this._logger.log(this._buildMessage(message, 'log', null, <Record<any, any>>args))
     }
 
     public debug(message: any, context?: string): any {
         this._logger.log(this._buildMessage(message, 'debug', context))
     }
 
-    private _buildMessage(errorObject: string | Error, level?: LogLevel, context?: string, args?: Record<any, any>): LogEntry {
+    private _buildMessage(errorObject: string | Error | null, level?: LogLevel, context?: string, args?: Record<any, any>): LogEntry {
         const isTextMessage = typeof errorObject === 'string'
         return {
             message: isTextMessage ? errorObject : errorObject?.message,
             level: level ? this._mapLogLevel(level) : 'log',
             context: context || this._context,
             hostInfo: this._hostInfo,
-            trace: !isTextMessage ? Object.assign({}, args, {_stacktrace: errorObject.stack?.split('\n')}) : args,
+            trace: !isTextMessage && errorObject ? Object.assign({}, args, {_stacktrace: errorObject.stack?.split('\n')}) : args,
         }
     }
 }

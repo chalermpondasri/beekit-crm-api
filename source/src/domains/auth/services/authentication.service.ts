@@ -14,7 +14,7 @@ import { ApplicationErrorCode } from '@core/constants/error-code.enum'
 import { ICreateJwtTokenUseCase } from '@domains/auth/use-cases/interfaces/create-jwt-token.interface'
 import { AuthenticatedJwtPayload } from '@core/models/authenticated-jwt-payload.model'
 import { IErrorFactory } from '@core/factories/error/interfaces/error.factory.interface'
-import { ILoggerService } from '@domains/auth/interfaces/logger.service.interface'
+import { ILoggerService } from '@core/interfaces/logger.service.interface'
 import { IAuthenticationService } from '@domains/auth/interfaces/authentication.service.interface'
 import { AuthenticationCommand } from '@domains/auth/command-query/authentication.command'
 
@@ -40,6 +40,7 @@ export class AuthenticationService implements IAuthenticationService {
                     dateOfBirth: result.dateOfBirthString,
                     mobile: result.mobile,
                     email: result.email,
+                    traceId: result.traceId,
                 })
 
                 const token = this._createJwtUseCase.execute(
