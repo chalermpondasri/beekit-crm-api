@@ -3,15 +3,12 @@ import {
     Catch,
     ExceptionFilter,
     HttpException,
-    HttpStatus,
-    Inject,
 } from '@nestjs/common'
 import {
     ErrorDto,
     ErrorModel,
 } from '../models/error.model'
 import { ILoggerService } from '@core/interfaces/logger.service.interface'
-import { ProviderName } from '../constants/provider-name.enum'
 import { EnvironmentConfig } from '@core/models/environment-config.model'
 import { IAccessLoggerService } from '@core/interfaces/access-logger.service.interface'
 import { IRequestContextService } from '@core/interfaces/request-context.service.interface'

@@ -8,10 +8,11 @@ import { ILoggerService } from '@core/interfaces/logger.service.interface'
 import { EnvironmentConfig } from '@core/models/environment-config.model'
 import { IAccessLoggerService } from '@core/interfaces/access-logger.service.interface'
 import { IRequestContextService } from '@core/interfaces/request-context.service.interface'
+import { APP_FILTER } from '@nestjs/core'
 
 export const exceptionFilters: Provider[] = [
     {
-        provide: 'CORE_FILTER',
+        provide: APP_FILTER,
         scope: Scope.REQUEST,
         inject: [
             ProviderName.LOGGER_SERVICE,
