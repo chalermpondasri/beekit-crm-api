@@ -10,7 +10,6 @@ export class RequestContextService  implements IRequestContextService {
     public constructor() {
         this._requestId = v4()
         this._ts = Date.now()
-        console.log(this._ts)
     }
 
     public getTimestamp(): number {

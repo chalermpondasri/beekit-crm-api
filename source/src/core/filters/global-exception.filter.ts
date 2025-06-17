@@ -63,7 +63,6 @@ export class GlobalExceptionFilter implements ExceptionFilter {
             error: exception,
             queryParams: request.query,
         })
-        console.log( this._requestContextService.getRequestId(),this._requestContextService.getTimestamp())
 
         const errorObject = !this._envConfig.isProduction() ? {
             response: exception instanceof HttpException ? (exception.getResponse()) : null,
