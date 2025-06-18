@@ -28,7 +28,6 @@ FROM base AS production
 USER root
 WORKDIR /app
 
-
 COPY source/package.json source/package-lock.json ./
 
 COPY --from=build /build/dist ./dist
