@@ -24,3 +24,36 @@ DOMAIN: superapps-th.cloud
 SUB_DOMAIN: miniapps-dev
 PATH_PATTERN: /cp/transit/ticket20/api
 PATH_HEALTH_CHECK: /cp/transit/ticket20/api/healthcheck
+
+dev:
+  AWS_REGION: ap-southeast-7
+  AWS_ROLE_TO_ASSUME: arn:aws:iam::340752823852:role/github
+  CLUSTER_NAME: miniapps-dev
+  SERVICE_NAME: miniapps-ticket20-api-dev
+  TASK_DEFINITION_NAME: miniapps-ticket20-api-dev
+  CONTAINER_NAME: miniapps-ticket20-api-dev
+
+  DOMAIN: opendata-dga.cloud
+  SUB_DOMAIN: miniapps2-dev
+
+uat:
+  AWS_REGION: ap-southeast-7
+  AWS_ROLE_TO_ASSUME: arn:aws:iam::340752823852:role/github
+  CLUSTER_NAME: miniapps-uat
+  SERVICE_NAME: miniapps-ticket20-api-uat
+  TASK_DEFINITION_NAME: miniapps-ticket20-api-uat
+  CONTAINER_NAME: miniapps-ticket20-api-uat
+
+  DOMAIN: opendata-dga.cloud
+  SUB_DOMAIN: miniapps2-uat
+
+prod:
+  AWS_REGION: ap-southeast-7
+  AWS_ROLE_TO_ASSUME: arn:aws:iam::877502627026:role/github
+  CLUSTER_NAME: miniapps-cluster-prod
+  SERVICE_NAME: miniapps-ticket20-api-prod
+  TASK_DEFINITION_NAME: miniapps-ticket20-api-prod
+  CONTAINER_NAME: miniapps-ticket20-api-prod
+
+  DOMAIN: superapps-th.cloud
+  SUB_DOMAIN: miniapps
