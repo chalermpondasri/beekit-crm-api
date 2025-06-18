@@ -1,6 +1,5 @@
 import {
     Algorithm,
-    Bufferable,
     createDecoder,
     createSigner,
     createVerifier,

@@ -7,7 +7,6 @@ import {
 } from '@nestjs/common'
 import {
     catchError,
-    finalize,
     mergeMap,
     Observable,
     of,
