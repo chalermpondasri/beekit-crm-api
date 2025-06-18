@@ -23,3 +23,4 @@ AWS_ROLE_TO_ASSUME: arn:aws:iam::877502627026:role/github
 DOMAIN: superapps-th.cloud
 SUB_DOMAIN: miniapps-dev
 PATH_PATTERN: /cp/transit/ticket20/api
+PATH_HEALTH_CHECK: /cp/transit/ticket20/api/healthcheck
