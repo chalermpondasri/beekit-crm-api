@@ -1,6 +1,6 @@
 import { Provider } from '@nestjs/common'
-import { ProviderName } from '../../../core/constants/provider-name.enum'
-import { IErrorFactory } from '../../../core/factories/error/interfaces/error.factory.interface'
+import { ProviderName } from '@core/constants/provider-name.enum'
+import { IErrorFactory } from '@core/factories/error/interfaces/error.factory.interface'
 import { ILoggerService } from '@core/interfaces/logger.service.interface'
 import { AuthenticationService } from '@domains/auth/services/authentication.service'
 import { ICreateJwtTokenUseCase } from '@domains/auth/use-cases/interfaces/create-jwt-token.interface'

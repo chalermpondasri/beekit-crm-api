@@ -1,5 +1,5 @@
-import { ApplicationErrorCode } from '../../../constants/error-code.enum'
-import { ErrorModel } from '../../../models/error.model'
+import { ApplicationErrorCode } from '@core/constants/error-code.enum'
+import { ErrorModel } from '@core/models/error.model'
 
 export interface IErrorFactory {
     createUnauthorizedError(code: ApplicationErrorCode,  errorObject?: any): ErrorModel

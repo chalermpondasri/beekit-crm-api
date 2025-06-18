@@ -8,8 +8,6 @@ import { EnvironmentConfig } from '../models/environment-config.model'
 import { ILoggerService } from '@core/interfaces/logger.service.interface'
 import { IRequestContextService } from '@core/interfaces/request-context.service.interface'
 import { AccessLoggerService } from '@core/services/access-logger.service'
-import * as process from 'node:process'
-import { Logger } from 'winston'
 
 export const loggerServiceProvider: Provider = {
     provide: ProviderName.LOGGER_SERVICE,

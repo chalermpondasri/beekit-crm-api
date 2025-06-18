@@ -31,7 +31,7 @@ export class AuthenticationUseCase implements IAuthenticateUserUseCase {
             return throwError(() => new Error('Invalid App ID'))
         }
 
-        const traceId = this._generateTraceId(input.appId, input.mToken)
+        const traceId = this._generateTraceId(input.mToken)
         return this._eGovAdapter.getToken(traceId).pipe(
             mergeMap(response => {
                 const payload: IVerifyMTokenRequest = {
@@ -57,7 +57,7 @@ export class AuthenticationUseCase implements IAuthenticateUserUseCase {
         )
     }
 
-    private _generateTraceId(appId: string, mToken: string): string {
+    private _generateTraceId(mToken: string): string {
         const appIndicator = extractAppIndicator(this._config.APP_NAME)
         return `dga-czp-${appIndicator}-${mToken}`
     }
