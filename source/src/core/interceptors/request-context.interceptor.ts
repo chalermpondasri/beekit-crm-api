@@ -6,7 +6,11 @@ import {
     NestInterceptor,
 } from '@nestjs/common'
 import {
+    catchError,
+    finalize,
+    mergeMap,
     Observable,
+    of,
     tap,
 } from 'rxjs'
 import { extractTokenFromHeader } from '@utils/bearer-extract.util'
@@ -14,7 +18,6 @@ import {
     Request,
     Response,
 } from 'express'
-import { Jwt } from 'jsonwebtoken'
 import { ProviderName } from '../constants/provider-name.enum'
 import { ITokenizationService } from '@domains/auth/interfaces/tokenization.interface'
 import { IRequestContextService } from '../interfaces/request-context.service.interface'
@@ -36,37 +39,42 @@ export class RequestContextInterceptor implements NestInterceptor {
         this._logger.setContext(RequestContextInterceptor.name)
     }
     public intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+        const requestStartTime = Date.now()
+
         const request = context.switchToHttp().getRequest() as Request
 
         const response = context.switchToHttp().getResponse() as Response
         response.setHeader('X-Request-Id', this._requestContextService.getRequestId())
 
         const token = extractTokenFromHeader(request.headers?.authorization)
-        if(!token) {
-            return next.handle()
-        }
 
-        try {
-            const jwt = <Jwt> this._tokenizationService.decode(token, 'accessToken')
-            this._requestContextService.setUserContext(jwt.payload)
-        } catch (err){
-            this._logger.error(err)
-        }
 
-        return next.handle().pipe(
+        const tokenProcessing$ = token
+            ? this._tokenizationService.decode(token, 'accessToken').pipe(
+                tap(data => this._requestContextService.setUserContext(data)),
+                catchError(err => {
+                    this._logger.error('Token validation failed:', err)
+                    return of(null)
+                })
+            )
+            : of(null)
+
+        return tokenProcessing$.pipe(
+            mergeMap(() => next.handle()),
             tap(() => {
                 this._accessLogger.log({
                     requestId: this._requestContextService.getRequestId(),
                     method: request.method,
                     url: request.url,
                     traceId: this._requestContextService.getTraceId(),
-                    userAgent: request.headers['user-agent'],
+                    userAgent: request.headers?.['user-agent'] || 'unknown',
                     statusCode: response.statusCode,
-                    responseTime: Date.now() - this._requestContextService.getTimestamp(),
-                    timestamp: new Date(this._requestContextService.getTimestamp()),
+                    responseTime: Date.now() - requestStartTime,
+                    timestamp: new Date(requestStartTime),
                 })
-            })
+            }),
         )
+
 
     }
 }

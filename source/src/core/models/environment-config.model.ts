@@ -3,10 +3,8 @@ import {
     IsNotEmpty,
     IsNumber,
     IsOptional,
-    IsUUID,
 } from 'class-validator'
 import { Transform } from 'class-transformer'
-import { IsRSAKey } from '../decorators/validators/is-rsa-key.decorator'
 
 export class EnvironmentConfig {
 
@@ -34,16 +32,30 @@ export class EnvironmentConfig {
     public readonly APP_PREFIX: string = ''
 
     @IsNotEmpty()
+    public readonly JWT_ACCESS_KEY_ALGORITHM: string
+
+    @IsNotEmpty()
     @IsBase64()
-    @IsRSAKey('private', ({value}) => Buffer.from(value, 'base64'),)
-    public readonly JWT_ACCESS_TOKEN_KEY: string
+    public readonly JWT_ACCESS_TOKEN_PRIVATE_KEY: string
+
+    @IsNotEmpty()
+    @IsBase64()
+    public readonly JWT_ACCESS_TOKEN_PUBLIC_KEY: string
+
     @IsNotEmpty()
     public readonly JWT_ACCESS_TOKEN_TTL: string
 
     @IsNotEmpty()
+    public readonly JWT_REFRESH_KEY_ALGORITHM: string
+
+    @IsNotEmpty()
     @IsBase64()
-    @IsRSAKey('private', ({value}) => Buffer.from(value, 'base64'),)
-    public readonly JWT_REFRESH_TOKEN_KEY: string
+    public readonly JWT_REFRESH_TOKEN_PRIVATE_KEY: string
+
+    @IsNotEmpty()
+    @IsBase64()
+    public readonly JWT_REFRESH_TOKEN_PUBLIC_KEY: string
+
     @IsNotEmpty()
     public readonly JWT_REFRESH_TOKEN_TTL: string
 

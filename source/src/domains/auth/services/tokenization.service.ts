@@ -2,39 +2,32 @@ import {
     IKeySigner,
     ITokenizationService,
 } from '@domains/auth/interfaces/tokenization.interface'
-import { Jwt } from 'jsonwebtoken'
+import { Observable } from 'rxjs'
 
 export class TokenizationService implements ITokenizationService {
     public constructor(
         private readonly _accessTokenSigner: IKeySigner,
         private readonly _refreshTokenSigner: IKeySigner,
-        private readonly _accessTokenTTL: string,
-        private readonly _refreshTokenTTL: string,
     ) {
     }
 
-    public createAccessToken(data: object, ttl?: string): string {
-        return this._accessTokenSigner.sign(data, ttl || this._accessTokenTTL)
+    public createAccessToken(data: Record<string, any>): Observable<string> {
+        return this._accessTokenSigner.sign(data)
     }
 
-    public createRefreshToken(data: object, ttl?: string): string {
-        return this._refreshTokenSigner.sign(data, ttl || this._refreshTokenTTL)
+    public createRefreshToken(data: Record<string, any>): Observable<string> {
+        return this._refreshTokenSigner.sign(data)
     }
 
-    public verifyRefreshToken(token: string): Jwt {
-        return this._refreshTokenSigner.verify(token)
+    public verifyRefreshToken<T>(token: string): Observable<T> {
+        return this._refreshTokenSigner.verify<T>(token)
     }
 
-    public verifyAccessToken(token: string): Jwt {
-        return this._accessTokenSigner.verify(token)
+    public verifyAccessToken<T>(token: string): Observable<T> {
+        return this._accessTokenSigner.verify<T>(token)
     }
 
-    public decode(token: string, keyType: 'accessToken' | 'refreshToken'): Jwt {
-        switch (keyType) {
-            case 'accessToken':
-                return this._accessTokenSigner.decode(token)
-            case 'refreshToken':
-                return this._refreshTokenSigner.decode(token)
-        }
+    public decode(token: string, keyType: 'accessToken' | 'refreshToken'): Observable<Record<any, any>> {
+        return keyType === 'accessToken' ? this._accessTokenSigner.decode(token) : this._refreshTokenSigner.decode(token)
     }
 }

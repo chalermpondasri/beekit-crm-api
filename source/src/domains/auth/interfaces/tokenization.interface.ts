@@ -1,15 +1,15 @@
-import { Jwt } from 'jsonwebtoken'
+import { Observable } from 'rxjs'
 
 export interface ITokenizationService {
-    createAccessToken(data: object, ttl?: string): string
-    createRefreshToken(data: object, ttl?: string): string
-    verifyAccessToken(token: string): Jwt
-    verifyRefreshToken(token: string): Jwt
-    decode(token: string, keyType: 'accessToken' | 'refreshToken'): Jwt
+    createAccessToken(data: Record<string, any>, ttl?: string): Observable<string>
+    createRefreshToken(data: Record<string, any>, ttl?: string): Observable<string>
+    verifyAccessToken<T>(token: string): Observable<T>
+    verifyRefreshToken<T>(token: string): Observable<T>
+    decode(token: string, keyType: 'accessToken' | 'refreshToken'): Observable<Record<string,any>>
 }
 
 export interface IKeySigner {
-    sign(data: object, ttl?: string): string
-    verify(token: string): Jwt
-    decode(token: string): Jwt
+    sign(data: Record<string, any>): Observable<string>
+    verify<T>(token: string): Observable<T>
+    decode<T>(token: string): Observable<T>
 }
