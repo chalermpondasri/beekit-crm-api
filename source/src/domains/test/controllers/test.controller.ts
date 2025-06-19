@@ -32,4 +32,9 @@ export class TestController {
         return this._testService.testCommand(body)
     }
 
+    @Get('/jwt')
+    public testJwt(){
+        return {success: true, timestamp: new Date().toISOString()}
+    }
+
 }
