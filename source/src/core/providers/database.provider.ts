@@ -28,9 +28,9 @@ export const databaseProvider: Provider = {
                         password: encodeURIComponent(config.DB_PASSWORD),
                     }
                     : null,
-                connectTimeoutMS: 3000,
+                connectTimeoutMS: 10000,
                 socketTimeoutMS: 10000,
-                serverSelectionTimeoutMS: 5000,
+                serverSelectionTimeoutMS: 30000,
                 maxPoolSize: 10,
                 minPoolSize: 1,
                 maxIdleTimeMS: 30000,
