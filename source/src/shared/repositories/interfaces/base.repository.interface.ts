@@ -41,7 +41,7 @@ export interface IDeleteOptions {
     softDelete?: boolean
 }
 
-export interface IRepositoryMapper<M extends IEntity, S> {
+export interface IRepositoryMapper<M extends IEntity, S extends ISchema> {
     serialize(model: M): S
 
     deserialize(schema: S): M

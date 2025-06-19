@@ -26,7 +26,8 @@ import {
     IRepository,
     IRepositoryMapper,
     SortOpts,
-} from '@shared/repositories/interfaces/base/repository.interface'
+} from '@shared/repositories/interfaces/base.repository.interface'
+
 
 export abstract class AbstractMongoRepository<M extends IEntity, S extends ISchema> implements IRepository<M> {
     protected constructor(
