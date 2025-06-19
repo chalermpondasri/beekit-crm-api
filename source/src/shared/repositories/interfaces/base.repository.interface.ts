@@ -22,7 +22,7 @@ export interface IRepository<T extends IEntity, S extends ISchema = any> {
 
     count(where?: FilterOpts<T>): Observable<number>
 
-    save(entity: T): Observable<T>
+    save(entity: T): Observable<string>
 
     update(entity: T): Observable<T>
 

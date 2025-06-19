@@ -9,12 +9,11 @@ import {
     WithoutId,
 } from 'mongodb'
 import {
-    Observable,
-    Observer,
     concatMap,
     from,
     map,
-    mergeMap,
+    Observable,
+    Observer,
 } from 'rxjs'
 import {
     IEntity,
@@ -108,17 +107,12 @@ export abstract class AbstractMongoRepository<M extends IEntity, S extends ISche
         ).pipe(map(() => entity))
     }
 
-    public save(entity: M): Observable<M> {
+    public save(entity: M): Observable<string> {
         const doc = this.toDocument(entity)
 
         // @ts-ignore
         return from(this._collection.insertOne(doc)).pipe(
-            mergeMap(async (result) => {
-                const filter = <Filter<S>>{_id: result.insertedId}
-                return this._collection.findOne(filter)
-            }),
-            // @ts-ignore
-            map((r) => this.toModel(r)),
+            map((res) => res.insertedId.toString()),
         )
     }
 

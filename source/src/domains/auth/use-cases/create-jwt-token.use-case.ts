@@ -6,6 +6,11 @@ import {
 import { CreateJwtOutput } from '@domains/auth/use-cases/input-output/create-jwt.output'
 import { ITokenizationService } from '@domains/auth/interfaces/tokenization.interface'
 import { plainToInstance } from 'class-transformer'
+import {
+    forkJoin,
+    map,
+    Observable,
+} from 'rxjs'
 
 export class CreateJwtTokenUseCase implements ICreateJwtTokenUseCase {
     public constructor(
@@ -13,13 +18,17 @@ export class CreateJwtTokenUseCase implements ICreateJwtTokenUseCase {
     ) {
     }
 
-    public execute(accessTokenData: CreateJwtAccessTokenInput, refreshTokenObject: CreateJwtRefreshTokenInput): CreateJwtOutput {
-        const accessToken = this._tokenizationService.createAccessToken(accessTokenData)
-        const refreshToken = this._tokenizationService.createRefreshToken(refreshTokenObject)
-        return plainToInstance(CreateJwtOutput, {
-            accessToken,
-            refreshToken,
-        })
+    public execute(accessTokenData: CreateJwtAccessTokenInput, refreshTokenObject: CreateJwtRefreshTokenInput): Observable<CreateJwtOutput> {
+        return forkJoin([
+            this._tokenizationService.createAccessToken(accessTokenData),
+            // this._tokenizationService.createRefreshToken(refreshTokenObject)
+        ]).pipe(
+         map(([accessToken]) => plainToInstance(CreateJwtOutput, {
+             accessToken,
+             refreshToken: ''
+         }))
+        )
+
     }
 
 }

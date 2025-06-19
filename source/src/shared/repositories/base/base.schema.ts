@@ -1,4 +1,4 @@
-import { ISchema } from '@libs/repositories/base/model.interface'
+import { ISchema } from '@shared/repositories/base/model.interface'
 
 export abstract class BaseSchema implements ISchema {
     public _id: string

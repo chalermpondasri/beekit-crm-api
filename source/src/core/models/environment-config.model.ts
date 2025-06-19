@@ -11,10 +11,6 @@ export class EnvironmentConfig {
     @IsNotEmpty()
     public readonly APP_ENV: string
 
-    public isProduction() {
-        return this.APP_ENV === 'production'
-    }
-
     @IsNotEmpty()
     public readonly APP_NAME: string
 
@@ -72,4 +68,17 @@ export class EnvironmentConfig {
     @IsNotEmpty()
     public readonly EGOV_DEFAULT_AGENT_ID: string
 
+    @IsNotEmpty()
+    public readonly DB_HOSTS: string
+
+    @IsNotEmpty()
+    public readonly DB_NAME: string
+
+    public readonly DB_USERNAME: string
+    public readonly DB_PASSWORD: string
+    public readonly DB_REPL_NAME: string
+
+    public isProduction() {
+        return this.APP_ENV === 'production'
+    }
 }
