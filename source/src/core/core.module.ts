@@ -8,11 +8,11 @@ import { errorFactoryServiceProvider } from './providers/error-factory.provider'
 import { requestContextServiceProvider } from './providers/request-context-service.provider'
 import { APP_INTERCEPTOR } from '@nestjs/core'
 import { RequestContextInterceptor } from '@core/interceptors/request-context.interceptor'
-import { TokenizationModule } from '@domains/auth/tokenization.module'
 import {
     accessLoggerServiceProvider,
     loggerServiceProvider,
 } from '@core/providers/logger-service.provider'
+import { TokenizationModule } from '@domains/auth/tokenization.module'
 
 @Global()
 @Module({

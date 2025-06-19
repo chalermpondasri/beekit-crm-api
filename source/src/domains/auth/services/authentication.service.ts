@@ -3,6 +3,7 @@ import { AuthenticationResponse } from '@domains/auth/response/authentication.re
 import {
     catchError,
     map,
+    mergeMap,
     Observable,
     throwError,
 } from 'rxjs'
@@ -29,7 +30,7 @@ export class AuthenticationService implements IAuthenticationService {
 
     public authenticate(command: AuthenticationCommand): Observable<AuthenticationResponse> {
         return this._authUseCase.execute(command).pipe(
-            map(result => {
+            mergeMap(result => {
 
                 const jwtPayload = plainToInstance(AuthenticatedJwtPayload, {
                     sub: result.userId,
@@ -43,13 +44,15 @@ export class AuthenticationService implements IAuthenticationService {
                     traceId: result.traceId,
                 })
 
-                const token = this._createJwtUseCase.execute(
+                return this._createJwtUseCase.execute(
                     instanceToPlain(jwtPayload),
                     {
                         userId: result.userId,
                     },
-                )
-                return plainToInstance(AuthenticationResponse, instanceToPlain(token), {excludeExtraneousValues: true})
+                ).pipe(map( token => {
+                    return plainToInstance(AuthenticationResponse, instanceToPlain(token), {excludeExtraneousValues: true})
+                }))
+
             }),
             catchError(error => {
                 this._logger.error(error)
