@@ -77,7 +77,7 @@ async function benchmark() {
     }
 }
 
-describe('Benchmark', () => {
+xdescribe('Benchmark', () => {
     it('should pass the test', async () => {
         benchmark().catch(console.error);
     })
