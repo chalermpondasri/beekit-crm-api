@@ -49,17 +49,20 @@ export abstract class AbstractMongoRepository<M extends IEntity, S extends ISche
     }
 
     protected toObservable(source: AbstractCursor | Promise<WithId<S>> | Promise<WithoutId<S>>): Observable<M> {
-        const self = this
 
         if (Object(source).constructor === Promise) {
-            return from(source)
+            return from(source).pipe(
+                map((document: any) => this.toModel(document))
+            )
+
         }
         return new Observable((observer: Observer<M>) => {
-            const cursor = <AbstractCursor>source
-            cursor
-                .stream()
+            const cursor = <AbstractCursor<S>>source
+            const stream = cursor.stream()
+
+            stream
                 .on('data', (document: any) => {
-                    observer.next(self.toModel(document))
+                    observer.next(this.toModel(document))
                 })
                 .on('end', () => {
                     cursor.close().then(() => observer.complete())
@@ -67,6 +70,12 @@ export abstract class AbstractMongoRepository<M extends IEntity, S extends ISche
                 .on('error', (err: Error) => {
                     cursor.close().then(() => observer.error(err))
                 })
+
+            return () => {
+                stream.removeAllListeners()
+                cursor.close().catch(console.error)
+            }
+
         })
     }
 
