@@ -20,7 +20,7 @@ export const databaseProvider: Provider = {
         try {
             const servers = config.DB_HOSTS
             const dbName = config.DB_NAME
-            const url = `mongodb://${servers}/${dbName}`
+            const url = `${config.DB_PROTOCOL}://${servers}/${dbName}`
             const client = await MongoClient.connect(url, {
                 auth: config.DB_USERNAME
                     ? {

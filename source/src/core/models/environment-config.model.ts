@@ -69,6 +69,8 @@ export class EnvironmentConfig {
     public readonly EGOV_DEFAULT_AGENT_ID: string
 
     @IsNotEmpty()
+    public readonly DB_PROTOCOL: string
+    @IsNotEmpty()
     public readonly DB_HOSTS: string
 
     @IsNotEmpty()
