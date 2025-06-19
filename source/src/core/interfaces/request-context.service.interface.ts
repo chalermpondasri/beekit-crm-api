@@ -6,4 +6,5 @@ export interface IRequestContextService {
     getRequestId(): string
     getTraceId(): string
     getTimestamp(): number
+    getHrTime(): bigint
 }

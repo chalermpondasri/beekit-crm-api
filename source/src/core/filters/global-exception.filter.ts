@@ -58,7 +58,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
             traceId: this._requestContextService.getTraceId(),
             userAgent: request.headers['user-agent'],
             statusCode: statusCode,
-            responseTime: Date.now() - this._requestContextService.getTimestamp(),
+            responseTime: Number((process.hrtime.bigint() - this._requestContextService.getHrTime()))/100000,
             timestamp: new Date(this._requestContextService.getTimestamp()),
             error: exception,
             queryParams: request.query,

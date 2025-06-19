@@ -7,13 +7,18 @@ export class RequestContextService  implements IRequestContextService {
     private _userContext: UserContext
     private readonly _ts
     private readonly _requestId: string
+    private readonly _hrTime: bigint
     public constructor() {
         this._requestId = v4()
         this._ts = Date.now()
+        this._hrTime = process.hrtime.bigint()
     }
-
     public getTimestamp(): number {
         return this._ts
+    }
+
+    public getHrTime(): bigint {
+        return this._hrTime
     }
     public setUserContext(userContext: any) {
         this._userContext = plainToInstance(UserContext, {...userContext})

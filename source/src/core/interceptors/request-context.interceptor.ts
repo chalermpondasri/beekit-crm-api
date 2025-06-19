@@ -38,7 +38,8 @@ export class RequestContextInterceptor implements NestInterceptor {
         this._logger.setContext(RequestContextInterceptor.name)
     }
     public intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-        const requestStartTime = Date.now()
+        const requestStartTime  = process.hrtime.bigint();
+        const startTime = new Date()
 
         const request = context.switchToHttp().getRequest() as Request
 
@@ -68,8 +69,8 @@ export class RequestContextInterceptor implements NestInterceptor {
                     traceId: this._requestContextService.getTraceId(),
                     userAgent: request.headers?.['user-agent'] || 'unknown',
                     statusCode: response.statusCode,
-                    responseTime: Date.now() - requestStartTime,
-                    timestamp: new Date(requestStartTime),
+                    responseTime:  Number(process.hrtime.bigint() - requestStartTime)/100000,
+                    timestamp: startTime,
                 })
             }),
         )

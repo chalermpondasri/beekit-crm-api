@@ -1,5 +1,8 @@
 import { ProviderName } from '@core/constants/provider-name.enum'
-import { Provider } from '@nestjs/common'
+import {
+    Provider,
+    Scope,
+} from '@nestjs/common'
 import { EnvironmentConfig } from '@core/models/environment-config.model'
 import {
     Db,
@@ -13,6 +16,7 @@ export const databaseProvider: Provider = {
         ProviderName.ENVIRONMENT_CONFIG,
         ProviderName.LOGGER_SERVICE,
     ],
+    scope: Scope.DEFAULT,
     useFactory: async (
         config: EnvironmentConfig,
         logger: ILoggerService,
