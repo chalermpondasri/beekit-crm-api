@@ -9,20 +9,20 @@ import {
     MongoClient,
 } from 'mongodb'
 
-export const databaseProvider: Provider = {
-    provide: ProviderName.MONGO_DATASOURCE,
+export const mongoClientProvider: Provider = {
+    provide: ProviderName.MONGO_CLIENT,
     inject: [
         ProviderName.ENVIRONMENT_CONFIG,
     ],
     scope: Scope.DEFAULT,
     useFactory: async (
         config: EnvironmentConfig,
-    ): Promise<Db> => {
+    ): Promise<MongoClient> => {
         try {
             const servers = config.DB_HOSTS
             const dbName = config.DB_NAME
             const url = `${config.DB_PROTOCOL}://${servers}/${dbName}`
-            const client = await MongoClient.connect(url, {
+            return await MongoClient.connect(url, {
                 auth: config.DB_USERNAME
                     ? {
                         username: encodeURIComponent(config.DB_USERNAME),
@@ -40,12 +40,25 @@ export const databaseProvider: Provider = {
                 // replicaSet: config.DB_REPL_NAME ?? null,
                 readPreference: 'secondaryPreferred',
             })
-            const db = client.db(dbName);
-            (db as any).__client = client // Store client for cleanup
-            return db
         } catch (e) {
             throw e
         }
+    },
+}
 
+
+export const databaseProvider: Provider = {
+    provide: ProviderName.MONGO_DATASOURCE,
+    inject: [
+        ProviderName.ENVIRONMENT_CONFIG,
+        ProviderName.MONGO_CLIENT,
+    ],
+    scope: Scope.DEFAULT,
+    useFactory: async (
+        config: EnvironmentConfig,
+        client: MongoClient,
+    ): Promise<Db> => {
+        const dbName = config.DB_NAME
+        return client.db(dbName)
     },
 }
