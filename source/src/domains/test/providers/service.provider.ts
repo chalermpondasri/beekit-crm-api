@@ -1,5 +1,6 @@
 import { Provider } from '@nestjs/common'
 import { TestService } from '@domains/test/services/test.service'
+import { ProviderName } from '@core/constants/provider-name.enum'
 
 export const serviceProviders: Provider[] = [
     {
@@ -7,8 +8,9 @@ export const serviceProviders: Provider[] = [
         inject: [
             'TEST_COMMAND',
             'TEST_QUERY',
+            ProviderName.USE_CASE_ACCEPT_TERM,
         ],
 
-        useFactory: (command, query) => new TestService(command, query),
-    }
+        useFactory: (command, query, accept) => new TestService(command, query, accept),
+    },
 ]

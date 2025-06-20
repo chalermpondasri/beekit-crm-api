@@ -10,7 +10,8 @@ export class CardEntityMapper implements IRepositoryMapper<CardEntity, ICardSche
 
     public serialize(model: CardEntity): ICardSchema {
         return {
-            createdAt: model.createdAt
+            _id: model._id,
+            createdAt: model.createdAt,
         }
     }
 
