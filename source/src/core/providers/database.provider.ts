@@ -32,8 +32,8 @@ export const mongoClientProvider: Provider = {
                 // connectTimeoutMS: 10000,
                 // socketTimeoutMS: 10000,
                 // serverSelectionTimeoutMS: 30000,
-                maxPoolSize: 100,
-                minPoolSize: 20,
+                maxPoolSize: 140,
+                minPoolSize: 100,
                 maxIdleTimeMS: 30000,   // Close idle connections after 30s
                 // retryWrites: true,
                 // writeConcern: {w: 'majority'},
