@@ -35,7 +35,6 @@ export class RequestContextInterceptor implements NestInterceptor {
         @Inject(ProviderName.ACCESS_LOGGER_SERVICE)
         private readonly _accessLogger: IAccessLoggerService,
     ) {
-        this._logger.setContext(RequestContextInterceptor.name)
     }
     public intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
         const requestStartTime  = process.hrtime.bigint();
@@ -53,7 +52,7 @@ export class RequestContextInterceptor implements NestInterceptor {
             ? this._tokenizationService.decode(token, 'accessToken').pipe(
                 tap(data => this._requestContextService.setUserContext(data)),
                 catchError(err => {
-                    this._logger.error('Token validation failed:', err)
+                    this._logger.error('Token validation failed:', err, RequestContextInterceptor.name)
                     return of(null)
                 })
             )
@@ -66,7 +65,9 @@ export class RequestContextInterceptor implements NestInterceptor {
                     requestId: this._requestContextService.getRequestId(),
                     method: request.method,
                     url: request.url,
+                    userId: this._requestContextService.getUserId(),
                     traceId: this._requestContextService.getTraceId(),
+                    queryParams: request.query,
                     userAgent: request.headers?.['user-agent'] || 'unknown',
                     statusCode: response.statusCode,
                     responseTime:  Number(process.hrtime.bigint() - requestStartTime)/100000,

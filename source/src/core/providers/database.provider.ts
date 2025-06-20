@@ -8,18 +8,15 @@ import {
     Db,
     MongoClient,
 } from 'mongodb'
-import { ILoggerService } from '@core/interfaces/logger.service.interface'
 
 export const databaseProvider: Provider = {
     provide: ProviderName.MONGO_DATASOURCE,
     inject: [
         ProviderName.ENVIRONMENT_CONFIG,
-        ProviderName.LOGGER_SERVICE,
     ],
     scope: Scope.DEFAULT,
     useFactory: async (
         config: EnvironmentConfig,
-        logger: ILoggerService,
     ): Promise<Db> => {
         try {
             const servers = config.DB_HOSTS
@@ -35,9 +32,9 @@ export const databaseProvider: Provider = {
                 // connectTimeoutMS: 10000,
                 // socketTimeoutMS: 10000,
                 // serverSelectionTimeoutMS: 30000,
-                // maxPoolSize: 100,
-                // minPoolSize: 1,
-                // maxIdleTimeMS: 30000,
+                maxPoolSize: 100,
+                minPoolSize: 20,
+                maxIdleTimeMS: 30000,   // Close idle connections after 30s
                 // retryWrites: true,
                 // writeConcern: {w: 'majority'},
                 // replicaSet: config.DB_REPL_NAME ?? null,
@@ -47,7 +44,6 @@ export const databaseProvider: Provider = {
             (db as any).__client = client // Store client for cleanup
             return db
         } catch (e) {
-            logger.setContext(ProviderName.MONGO_DATASOURCE).error(e)
             throw e
         }
 
