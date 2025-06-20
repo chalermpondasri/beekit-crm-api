@@ -32,11 +32,11 @@ export const mongoClientProvider: Provider = {
                 // connectTimeoutMS: 10000,
                 // socketTimeoutMS: 10000,
                 // serverSelectionTimeoutMS: 30000,
-                maxPoolSize: 140,
-                minPoolSize: 100,
+                maxPoolSize: config.DB_GLOBAL_MAX_POOL_SIZE / config.POD_TO_SCALE,
+                minPoolSize: 2,
                 maxIdleTimeMS: 30000,   // Close idle connections after 30s
                 // retryWrites: true,
-                // writeConcern: {w: 'majority'},
+                writeConcern: {w: 'majority', journal: true},
                 // replicaSet: config.DB_REPL_NAME ?? null,
                 readPreference: 'secondaryPreferred',
             })
