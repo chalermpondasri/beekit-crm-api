@@ -4,8 +4,8 @@ import { HealthcheckModule } from '@domains/healthcheck/healthcheck.module'
 import { AuthModule } from '@domains/auth/auth.module'
 import { exceptionFilters } from '@core/providers/filters.provider'
 import { RepositoryModule } from '@shared/repositories/repository.module'
-import { TestModule } from '@domains/test/test.module'
 import { TokenizationModule } from '@domains/auth/tokenization.module'
+import { TosModule } from '@domains/tos/tos.module'
 
 @Module({
     imports: [
@@ -14,7 +14,8 @@ import { TokenizationModule } from '@domains/auth/tokenization.module'
         HealthcheckModule,
         AuthModule,
         RepositoryModule,
-        TestModule,
+        // TestModule,
+        TosModule,
     ],
     providers: [
         ...exceptionFilters,
