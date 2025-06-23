@@ -28,7 +28,8 @@ export class TermController {
 
     @ApiBearerAuth()
     @ApiOperation({
-        summary: 'Query user accepted term'
+        summary: `Query user accepted term version`,
+        description: `Check if user has accepted current term version and latest version.`
     })
     @ApiResponse({type: UserAcceptedTermResponse, status: 200})
     @UseGuards(CitizenIdGuard)
