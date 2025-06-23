@@ -19,6 +19,7 @@ import {
     ],
     exports: [
         databaseProvider,
+        mongoClientProvider,
     ]
 })
 export class DatabaseModule implements OnModuleDestroy{

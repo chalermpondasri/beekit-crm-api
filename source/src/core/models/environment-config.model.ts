@@ -90,4 +90,9 @@ export class EnvironmentConfig {
     public isProduction() {
         return this.APP_ENV === 'production'
     }
+
+    public getDatabaseClusterMode(): 'replicaSet' | 'sharded' {
+        return this.DB_HOSTS.includes('shard') ?  'sharded': 'replicaSet'
+
+    }
 }

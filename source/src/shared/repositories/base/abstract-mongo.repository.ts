@@ -36,8 +36,9 @@ export abstract class AbstractMongoRepository<M extends IEntity, S extends ISche
     ) {
     }
 
-    public async createIndexes(): Promise<this> {
-        return Promise.resolve(this)
+    public async setup(setupFn: ({collection}: {collection: Collection<S>}) => Promise<void>): Promise<this> {
+        await setupFn({collection: this._collection})
+        return this
     }
 
     protected toDocument(model: M): S {

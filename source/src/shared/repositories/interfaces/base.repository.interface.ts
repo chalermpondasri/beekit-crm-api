@@ -1,4 +1,7 @@
-import { RootFilterOperators } from 'mongodb'
+import {
+    Collection,
+    RootFilterOperators,
+} from 'mongodb'
 import { Observable } from 'rxjs'
 import {
     IEntity,
@@ -15,7 +18,7 @@ export type SortOpts<T> = {
 }
 
 export interface IRepository<T extends IEntity, S extends ISchema = any> {
-    createIndexes(): Promise<this>
+    setup(setupFn:({collection}:{collection: Collection<S>}) => Promise<void>): Promise<this>
     getById(id: string): Observable<T>
 
     find(where?: FilterOpts<T>, sortOpts?: SortOpts<T>): Observable<T>
