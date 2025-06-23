@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs'
 
 export interface IQueryUseCase {
-    execute(): Observable<any>
+    execute(id?: string): Observable<any>
 }
 
 export interface ICommandUseCase {

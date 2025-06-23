@@ -11,7 +11,11 @@ export class TestQueryUseCase implements IQueryUseCase {
         private readonly _termRepository: IAcceptTermRepository
     ) {
     }
-    public execute(): Observable<any> {
+    public execute(id?: string): Observable<any> {
+        if (id) {
+            return this._termRepository.findOne({_id: id})
+        }
+
         return this._termRepository.find().pipe(
             take(10),
             toArray(),

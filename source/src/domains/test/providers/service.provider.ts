@@ -9,8 +9,22 @@ export const serviceProviders: Provider[] = [
             'TEST_COMMAND',
             'TEST_QUERY',
             ProviderName.USE_CASE_ACCEPT_TERM,
+            ProviderName.USE_CASE_ACCEPT_TERM_CC,
+            ProviderName.USE_CASE_ACCEPT_TERM_QUERY_CC,
         ],
 
-        useFactory: (command, query, accept) => new TestService(command, query, accept),
+        useFactory: (
+            command,
+            query,
+            accept,
+            acceptCC,
+            acceptQueryCC,
+            ) => new TestService(
+                command,
+            query,
+            accept,
+            acceptCC,
+            acceptQueryCC
+            ),
     },
 ]

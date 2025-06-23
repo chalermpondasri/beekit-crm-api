@@ -22,14 +22,33 @@ export class TestController {
     @Get()
     public testQuery(){
         return this._testService.testQuery()
-
     }
 
-    @Post()
+    @Post('/query')
+    public testQueryById(
+        @Body('id') id: string,
+    ){
+        return this._testService.testQuery(id)
+    }
+
+    @Get('/query/cluster-collection')
+    public testClusterCollectionQuery(
+    ){
+        return this._testService.testClusterCollectionQuery()
+    }
+
+    @Post('/create')
     public testCommand(
         @Body() body: TestCommand,
     ){
         return this._testService.testCommand(body)
+    }
+
+    @Post('/create/cluster-collection')
+    public testClusterCollectionCommand(
+        @Body() body: TestCommand,
+    ){
+        return this._testService.testClusterCollectionCommand(body)
     }
 
     @Get('/jwt')
