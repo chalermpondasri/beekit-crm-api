@@ -31,10 +31,11 @@ export class TestController {
         return this._testService.testQuery(id)
     }
 
-    @Get('/query/cluster-collection')
+    @Post('/query/cluster-collection')
     public testClusterCollectionQuery(
+        @Body('id') id: string,
     ){
-        return this._testService.testClusterCollectionQuery()
+        return this._testService.testClusterCollectionQuery(id)
     }
 
     @Post('/create')
