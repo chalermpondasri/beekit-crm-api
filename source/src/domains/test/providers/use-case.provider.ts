@@ -4,14 +4,15 @@ import { TestCommandUseCase } from '@domains/test/use-cases/test-command.use-cas
 import { ProviderName } from '@core/constants/provider-name.enum'
 import { ICardRepository } from '@shared/repositories/interfaces/card.repository.interface'
 import { AcceptTermUseCase } from '@domains/test/use-cases/create-term.use-case'
+import { IAcceptTermRepository } from '@shared/repositories/interfaces/term.repository.interface'
 
 export const useCaseProviders: Provider[] = [
     {
         provide: 'TEST_QUERY',
         inject: [
-            ProviderName.CARD_REPOSITORY,
+            ProviderName.ACCEPT_TERM_REPOSITORY,
         ],
-        useFactory: (cardRepository: ICardRepository) => new TestQueryUseCase(cardRepository),
+        useFactory: (acceptTermRepository: IAcceptTermRepository) => new TestQueryUseCase(acceptTermRepository),
     },
     {
         provide: 'TEST_COMMAND',

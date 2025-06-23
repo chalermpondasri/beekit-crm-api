@@ -4,15 +4,15 @@ import {
     take,
     toArray,
 } from 'rxjs'
-import { ICardRepository } from '@shared/repositories/interfaces/card.repository.interface'
+import { IAcceptTermRepository } from '@shared/repositories/interfaces/term.repository.interface'
 
 export class TestQueryUseCase implements IQueryUseCase {
     public constructor(
-        private readonly _cardRepository: ICardRepository
+        private readonly _termRepository: IAcceptTermRepository
     ) {
     }
     public execute(): Observable<any> {
-        return this._cardRepository.find().pipe(
+        return this._termRepository.find().pipe(
             take(10),
             toArray(),
         )
