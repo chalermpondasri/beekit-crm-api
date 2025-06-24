@@ -8,17 +8,13 @@ export class UserAcceptedTermResponse {
         example: '1.0.0',
     })
     @Expose()
-    public acceptedVersion: string
+    public accepted: string
 
     @ApiProperty({
         example: '2.0.0',
     })
     @Expose()
-    public requiredVersion: string
-
-    @ApiProperty({example: '2021-01-01T00:00:00.000Z'})
-    @Expose()
-    public acceptedDate: Date
+    public required: string
 
     @ApiProperty({example: false})
     @Expose()

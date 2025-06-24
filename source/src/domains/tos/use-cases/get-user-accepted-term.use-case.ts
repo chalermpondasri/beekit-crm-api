@@ -8,8 +8,8 @@ import {
 } from 'rxjs'
 import { AcceptedTermOutput } from '@domains/tos/input-output/accepted-term.output'
 import { IAcceptTermRepository } from '@shared/repositories/interfaces/term.repository.interface'
-import crypto from 'crypto'
 import { AcceptTermEntity } from '@shared/entities/accept-term.entity'
+import { HasherService } from '@domains/tos/services/hasher.service'
 
 export class GetUserAcceptedTermUseCase implements IGetUserAcceptedTermUseCase {
     public constructor(
@@ -19,12 +19,7 @@ export class GetUserAcceptedTermUseCase implements IGetUserAcceptedTermUseCase {
 
     public execute(citizenId: string): Observable<AcceptedTermOutput | null> {
         return of(citizenId).pipe(
-            map(citizenId =>
-                crypto
-                    .createHash('sha256')
-                    .update(citizenId)
-                    .digest('base64url')
-            ),
+            map(citizenId => HasherService.hashSha256toBase64Url(citizenId)),
             concatMap(hashed => this._acceptTermRepository.findOne({_id: hashed})),
             defaultIfEmpty(null as AcceptTermEntity),
             map((result) => {

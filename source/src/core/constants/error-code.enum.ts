@@ -1,3 +1,5 @@
 export enum ApplicationErrorCode {
     AUTHENTICATION_AUTH_FAILED = '401001',
+    TERM_ACCEPTED_REQUIRED = '400003',
+    TERM_VERSION_MISMATCH = '400001',
 }
