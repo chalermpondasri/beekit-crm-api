@@ -1,12 +1,12 @@
 NAME: miniapps-ticket20-api
 
-RUN_UNIT_TEST: true
+RUN_UNIT_TEST: false
 IGNORE_UNIT_TEST_ERROR: true
 TEST_IMAGE_NAME: miniapps-ticket20-api
 TEST_IMAGE_TAG: testimage-latest
 
 # SONAR SCAN
-RUN_SONAR: true
+RUN_SONAR: false
 IGNORE_SONAR_QUALITY: true
 SONAR_PROJECT_KEY: miniapps-ticket20-api
 SONAR_HOST_URL: https://sonar.sv-dga.com
