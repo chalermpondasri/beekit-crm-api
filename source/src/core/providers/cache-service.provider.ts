@@ -25,6 +25,8 @@ export const cacheServiceProvider: Provider = {
                 url: config.REDIS_CONNECTION_STRING,
 
                 socket: {
+                    timeout: 5000,
+                    connectTimeout: 5000,
                     reconnectStrategy: (retries: number, cause) => {
                         console.log(cause)
                         if (retries < 5) {
