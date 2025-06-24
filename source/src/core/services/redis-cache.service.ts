@@ -16,7 +16,6 @@ import {
 } from '@redis/client'
 import ms from 'ms'
 import {
-    ConsoleLogger,
     OnModuleDestroy,
 } from '@nestjs/common'
 import { WinstonConsoleLogger } from '@core/services/logger.service'
