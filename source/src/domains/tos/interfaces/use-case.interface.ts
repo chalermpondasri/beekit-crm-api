@@ -7,5 +7,5 @@ export interface IGetUserAcceptedTermUseCase {
 }
 
 export interface IUpdateUserAcceptedTermUseCase {
-  execute(citizenId: string, data: UpdateUserTermInput): Observable<boolean>
+  execute(citizenId: string, data: UpdateUserTermInput): Observable<AcceptedTermOutput>
 }

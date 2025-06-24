@@ -85,7 +85,7 @@ export class RedisCacheService implements ICacheService, OnModuleDestroy {
         }
 
         const options: SetOptions = {
-            expiration: opts?.extendTTL ? {
+            expiration: opts?.isForever ? {
                 type: 'KEEPTTL',
             } : {
                 type: 'PX',

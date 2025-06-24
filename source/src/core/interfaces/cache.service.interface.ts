@@ -5,9 +5,9 @@ import { Observable } from 'rxjs'
 export interface ISetOptions {
     ttl?: ms.StringValue
     /**
-     * extend TTL duration, redis only
+     * forever TTL duration, redis only
      */
-    extendTTL?: boolean
+    isForever?: boolean
 }
 export interface ICacheService {
     get<T>(key: string): Observable<T | null>
