@@ -13,8 +13,9 @@ import {
 import { apiReference } from '@scalar/nestjs-api-reference'
 import { ErrorDto } from '@core/models/error.model'
 import { ILoggerService } from '@core/interfaces/logger.service.interface'
+import * as process from 'node:process'
 
-(async function () {
+async function bootstrap() {
     const app = await NestFactory.create(MainModule, {
         cors: true,
         bufferLogs: true,
@@ -68,7 +69,7 @@ import { ILoggerService } from '@core/interfaces/logger.service.interface'
     }
 
     const port = envConfig.APP_PORT || 3000
-    console.log(envConfig)
+
     try {
         await app.listen(port)
         logger.setContext('NestApplication').log(`Application is running on: ${await app.getUrl()}`)
@@ -76,5 +77,7 @@ import { ILoggerService } from '@core/interfaces/logger.service.interface'
         console.error(e)
     }
 
+}
+console.log(process.env)
 
-})()
+bootstrap()
