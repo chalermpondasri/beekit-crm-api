@@ -12,6 +12,9 @@ export class AcceptTermMapper implements IRepositoryMapper<AcceptTermEntity, IAc
         return {
             _id: model._id,
             createdAt: model.createdAt,
+            acceptedAt: model.acceptedAt,
+            termVersion: model.termVersion,
+            updatedAt: model.updatedAt,
         }
     }
 }

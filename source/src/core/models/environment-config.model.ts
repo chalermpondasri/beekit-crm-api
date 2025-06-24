@@ -80,9 +80,15 @@ export class EnvironmentConfig {
     public readonly DB_PASSWORD: string
     public readonly DB_REPL_NAME: string
 
+    @IsNotEmpty()
+    public readonly TOS_VERSION: string
+
     @IsNumber()
     @Transform(({ value }) => Number(value))
     public readonly DB_GLOBAL_MAX_POOL_SIZE: number
+
+    @IsOptional()
+    public readonly REDIS_CONNECTION_STRING: string
 
     @IsNumber()
     @Transform(({ value }) => Number(value))

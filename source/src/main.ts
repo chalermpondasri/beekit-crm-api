@@ -40,7 +40,7 @@ import { ILoggerService } from '@core/interfaces/logger.service.interface'
         const config = new DocumentBuilder()
             .setTitle(envConfig.APP_NAME)
             .setVersion(envConfig.APP_VERSION)
-            .addBearerAuth()
+            .addBearerAuth({in: 'header', type: 'http', scheme: 'bearer', bearerFormat: 'JWT'}, 'access-token')
             .build()
 
         const documentFactory = () => SwaggerModule.createDocument(

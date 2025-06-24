@@ -25,7 +25,6 @@ import { TokenizationModule } from '@domains/auth/tokenization.module'
         accessLoggerServiceProvider,
         requestContextServiceProvider,
         errorFactoryServiceProvider,
-
         {
             provide: APP_INTERCEPTOR,
             scope: Scope.REQUEST,
