@@ -44,13 +44,13 @@ export class TermController {
 
     @ApiBearerAuth()
     @ApiOperation({
-        summary: `Update user accepted term version`,
-        description: `Update user accepted term version.`
+        summary: `user accepted term version`,
+        description: `user accepted term version.`
     })
     @ApiResponse({example: {success: true}, status: 200})
     @UseGuards(CitizenIdGuard)
     @HttpCode(200)
-    @Post('/update')
+    @Post('/accept')
     public updateUserTerm(
         @Body() command: UpdateUserTermCommand
     ) {
