@@ -69,8 +69,12 @@ import { ILoggerService } from '@core/interfaces/logger.service.interface'
 
     const port = envConfig.APP_PORT || 3000
     console.log(envConfig)
-    await app.listen(port)
+    try {
+        await app.listen(port)
+        logger.setContext('NestApplication').log(`Application is running on: ${await app.getUrl()}`)
+    } catch (e) {
+        console.error(e)
+    }
 
-    logger.setContext('NestApplication').log(`Application is running on: ${await app.getUrl()}`)
 
 })()
