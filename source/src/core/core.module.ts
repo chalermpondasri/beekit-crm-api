@@ -13,7 +13,6 @@ import {
     loggerServiceProvider,
 } from '@core/providers/logger-service.provider'
 import { TokenizationModule } from '@domains/auth/tokenization.module'
-import { cacheServiceProvider } from '@core/providers/cache-service.provider'
 
 @Global()
 @Module({
@@ -26,8 +25,6 @@ import { cacheServiceProvider } from '@core/providers/cache-service.provider'
         accessLoggerServiceProvider,
         requestContextServiceProvider,
         errorFactoryServiceProvider,
-        cacheServiceProvider,
-
         {
             provide: APP_INTERCEPTOR,
             scope: Scope.REQUEST,
@@ -40,7 +37,6 @@ import { cacheServiceProvider } from '@core/providers/cache-service.provider'
         errorFactoryServiceProvider,
         loggerServiceProvider,
         accessLoggerServiceProvider,
-        cacheServiceProvider,
     ],
 })
 export class CoreModule {

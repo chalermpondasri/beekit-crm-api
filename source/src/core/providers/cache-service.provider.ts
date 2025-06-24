@@ -20,8 +20,34 @@ export const cacheServiceProvider: Provider = {
             return new MemoryCacheService()
         }
 
-        const redisClient: RedisClientType = createClient({ url: config.REDIS_CONNECTION_STRING })
-        await redisClient.connect()
-        return new RedisCacheService(redisClient)
+        try {
+            let redisClient: RedisClientType = createClient({
+                url: config.REDIS_CONNECTION_STRING,
+
+                socket: {
+                    reconnectStrategy: (retries: number, cause) => {
+                        console.log(cause)
+                        if (retries < 5) {
+                            return Math.min((retries+1) * 1000, 3000)
+                        } else if (retries < 15) {
+                            return Math.min((retries+1) * 3000, 10000)
+                        } else if (retries < 25) {
+                            return 30000
+                        } else {
+                            console.error('Redis connection failed permanently after 25 retries')
+                            return false
+                        }
+                    },
+
+                },
+                disableOfflineQueue: true,
+            })
+            await redisClient.connect()
+            return new RedisCacheService(redisClient)
+        } catch (error) {
+            console.error('Failed to connect to Redis:', error)
+            return new MemoryCacheService()
+        }
+
     },
 }

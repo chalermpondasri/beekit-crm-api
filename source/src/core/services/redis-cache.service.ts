@@ -15,15 +15,51 @@ import {
     SetOptions,
 } from '@redis/client'
 import ms from 'ms'
-import { OnModuleDestroy } from '@nestjs/common'
+import {
+    ConsoleLogger,
+    OnModuleDestroy,
+} from '@nestjs/common'
+import { WinstonConsoleLogger } from '@core/services/logger.service'
+import { ILoggerService } from '@core/interfaces/logger.service.interface'
 
 export class RedisCacheService implements ICacheService, OnModuleDestroy {
     private readonly _ttlInMs: number = ms('1h')
+    private _isConnected = true
+    private readonly _logger: ILoggerService = new WinstonConsoleLogger('console')
 
     public constructor(
         private readonly _redisClient: RedisClientType) {
 
+        this.setupEventHandlers()
     }
+
+    private setupEventHandlers() {
+        this._redisClient.on('connect', () => {
+            this._isConnected = true
+            this._logger.log('Redis connected')
+        })
+
+        this._redisClient.on('error', (error) => {
+            this._isConnected = false
+            this._logger.error(`Redis error: ${error.message}`)
+        })
+
+        this._redisClient.on('end', () => {
+            this._isConnected = false
+            this._logger.warn('Redis connection ended')
+        })
+
+        this._redisClient.on('reconnecting', () => {
+            this._isConnected = false
+            this._logger.log('Redis reconnecting...')
+        })
+
+        this._redisClient.on('ready', () => {
+            this._isConnected = true
+            this._logger.log('Redis ready')
+        })
+    }
+
 
     public async onModuleDestroy() {
         this._redisClient.destroy()
