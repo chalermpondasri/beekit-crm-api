@@ -87,6 +87,9 @@ export class EnvironmentConfig {
     @Transform(({ value }) => Number(value))
     public readonly DB_GLOBAL_MAX_POOL_SIZE: number
 
+    @IsOptional()
+    public readonly REDIS_CONNECTION_STRING: string
+
     @IsNumber()
     @Transform(({ value }) => Number(value))
     public readonly POD_TO_SCALE: number

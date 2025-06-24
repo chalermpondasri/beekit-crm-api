@@ -1,9 +1,20 @@
-import { ICacheService } from '@core/interfaces/cache.service.interface'
+import {
+    ICacheService,
+    ISetOptions,
+} from '@core/interfaces/cache.service.interface'
 import ms from 'ms'
 import NodeCache from 'node-cache'
+import {
+    catchError,
+    map,
+    mergeMap,
+    Observable,
+    of,
+} from 'rxjs'
 
 export class MemoryCacheService implements ICacheService {
     private _cacheStorage: NodeCache
+
     public constructor() {
         this._cacheStorage = new NodeCache({
             checkperiod: 6000,
@@ -12,27 +23,52 @@ export class MemoryCacheService implements ICacheService {
         })
     }
 
-    public async get<T>(key: string): Promise<T | null> {
-        try {
-            return <T> this._cacheStorage.get(key) || null
-        } catch {
-            return null
-        }
+    public get<T>(key: string): Observable<T | null> {
+
+        return of(key).pipe(
+            map(key => <T>this._cacheStorage.get(key) || null),
+            catchError(() => of(null)),
+        )
 
     }
-    public async set(key: string, value: any, ttl?: ms.StringValue): Promise<void> {
-        const ttlInSeconds = ms(ttl || '1h') / 1000
-        this._cacheStorage.set(key, value, ttlInSeconds)
+
+    public set(key: string, value: any, opts?: ISetOptions): Observable<void> {
+        const ttlInSeconds = ms(opts?.ttl || '1h') / 1000
+        return of(this._cacheStorage.set(key, value, ttlInSeconds)).pipe(
+            map(() => {}),
+        )
     }
 
-    public async delete(key: string): Promise<void> {
-        this._cacheStorage.del(key)
+    public delete(key: string): Observable<void> {
+        return of(this._cacheStorage.del(key)).pipe(
+            map(() => {}),
+        )
     }
 
-    public async flush(): Promise<void> {
-        this._cacheStorage.flushAll()
+    public flush(): Observable<void> {
+        return of({}).pipe(
+            map(() => {
+                this._cacheStorage.flushAll()
+            })
+        )
     }
 
+    public getAndSet<T>(key: string, defaultValue$: () => Observable<T>, options?: ISetOptions): Observable<T> {
+        return this.get<T>(key).pipe(
+            mergeMap((value) => {
+                if (!!value) {
+                    return of(value)
+                }
+
+                return of({}).pipe(
+                    mergeMap(defaultValue$),
+                    mergeMap((defaultValue) => {
+                        return this.set(key, defaultValue, options).pipe(map(() => defaultValue))
+                    }),
+                )
+            }),
+        )
+    }
 
 
 }
