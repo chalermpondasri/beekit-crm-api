@@ -9,7 +9,7 @@ import {
 import { AcceptedTermOutput } from '@domains/tos/input-output/accepted-term.output'
 import { IAcceptTermRepository } from '@shared/repositories/interfaces/term.repository.interface'
 import { AcceptTermEntity } from '@shared/entities/accept-term.entity'
-import { HasherService } from '@domains/tos/services/hasher.service'
+import { HasherService } from '@utils/hasher.service'
 
 export class GetUserAcceptedTermUseCase implements IGetUserAcceptedTermUseCase {
     public constructor(

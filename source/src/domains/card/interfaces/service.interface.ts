@@ -1,10 +1,13 @@
-import { RegisterCardCommand } from '@domains/card/command-query/register-card.command'
+import {
+    RegisterEmvCardCommand,
+    RegisterRabbitCardCommand,
+} from '@domains/card/command-query/register-card.command'
 import { Observable } from 'rxjs'
 
 export interface IRabbitCardRegistrationService {
-    registerRabbitCard(payload: RegisterCardCommand): Observable<any>
+    registerRabbitCard(payload: RegisterRabbitCardCommand): Observable<any>
 }
 
 export interface IEmvCardRegistrationService {
-    registerEmvCard(payload: RegisterCardCommand): Observable<any>
+    registerEmvCard(payload: RegisterEmvCardCommand): Observable<any>
 }

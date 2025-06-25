@@ -13,8 +13,10 @@ import {
     ApiBody,
     ApiOperation,
 } from '@nestjs/swagger'
-import { RegisterCardCommand } from '@domains/card/command-query/register-card.command'
-import { TransitCardType } from '@domains/card/models/card-type.enum'
+import {
+    RegisterEmvCardCommand,
+    RegisterRabbitCardCommand,
+} from '@domains/card/command-query/register-card.command'
 import {
     IEmvCardRegistrationService,
     IRabbitCardRegistrationService,
@@ -35,22 +37,26 @@ export class CardController {
     }
 
     @ApiOperation({
-        summary: 'Register a new card',
-        description: 'Register a new cards either Rabbit or EMV transit card',
+        summary: 'Register Rabbit card',
+        description: 'Register a new Rabbit card',
     })
-    @ApiBody({type: RegisterCardCommand})
-    @Post('/')
-    public registerCards(
-        @Body() payload: RegisterCardCommand,
+    @ApiBody({type: RegisterRabbitCardCommand})
+    @Post('/register/rabbit')
+    public registerRabbitCards(
+        @Body() payload: RegisterRabbitCardCommand,
     ) {
-        if (payload.cardType === TransitCardType.RABBIT_CARD) {
-            return this._rabbitRegistrationService.registerRabbitCard(payload)
-        }
-
-        if (payload.cardType === TransitCardType.EMV) {
-            return this._emvRegistrationService.registerEmvCard(payload)
-        }
-
+        return this._rabbitRegistrationService.registerRabbitCard(payload)
+    }
+    @ApiOperation({
+        summary: 'Register EMV card',
+        description: 'Register a new EMV card',
+    })
+    @ApiBody({type: RegisterEmvCardCommand})
+    @Post('/register/emv')
+    public registerEmvCards(
+        @Body() payload: RegisterEmvCardCommand,
+    ) {
+        return this._emvRegistrationService.registerEmvCard(payload)
     }
 
     @ApiOperation({
