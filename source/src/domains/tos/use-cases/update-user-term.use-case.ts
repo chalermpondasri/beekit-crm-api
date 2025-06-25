@@ -18,16 +18,15 @@ export class UpdateUserTermUseCase implements IUpdateUserAcceptedTermUseCase {
     }
 
     public execute(citizenId: string, data: UpdateUserTermInput): Observable<AcceptedTermOutput> {
-        return of(citizenId).pipe(
-            map(citizenId => HasherService.hashSha256toBase64Url(citizenId)),
-            concatMap(hashed => this._acceptTermRepository.getById(hashed)),
+        const citizenIdHash = HasherService.hashSha256toBase64Url(citizenId)
+        return this._acceptTermRepository.getById(citizenIdHash).pipe(
             concatMap(entity => {
-                if (!entity) {
-                    entity = new AcceptTermEntity()
+                if(data.acceptedVersion === entity?.termVersion) {
+                    return of(entity)
                 }
 
-                if(entity.termVersion === data.acceptedVersion) {
-                    return of(entity)
+                if (!entity) {
+                    entity = new AcceptTermEntity()
                 }
 
                 entity.termVersion = data.acceptedVersion
@@ -36,6 +35,8 @@ export class UpdateUserTermUseCase implements IUpdateUserAcceptedTermUseCase {
                 if (entity._id) {
                     return this._acceptTermRepository.update(entity)
                 }
+
+                entity._id = citizenIdHash
                 return this._acceptTermRepository.save(entity).pipe(
                     concatMap(id => this._acceptTermRepository.getById(id)),
                 )
