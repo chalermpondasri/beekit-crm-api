@@ -38,6 +38,7 @@ export interface IRepository<T extends IEntity, S extends ISchema = any> {
     findOne(where: FilterOpts<T>): Observable<T>
     increaseBy(id: string, field: keyof T | string, value: number): Observable<T>
     decreaseBy(id: string, field: keyof T, value: number): Observable<T>
+    upsert(data: T): Observable<T>
 }
 
 export interface IDeleteOptions {

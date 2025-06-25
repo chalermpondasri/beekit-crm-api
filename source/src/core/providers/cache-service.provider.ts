@@ -8,7 +8,6 @@ import {
     RedisClientType,
 } from '@redis/client'
 
-
 export const cacheServiceProvider: Provider = {
     provide: ProviderName.CACHE_SERVICE,
     inject: [
@@ -23,7 +22,6 @@ export const cacheServiceProvider: Provider = {
         try {
             let redisClient: RedisClientType = createClient({
                 url: config.REDIS_CONNECTION_STRING,
-
                 socket: {
                     timeout: 5000,
                     connectTimeout: 5000,
@@ -46,10 +44,10 @@ export const cacheServiceProvider: Provider = {
             })
             await redisClient.connect()
             return new RedisCacheService(redisClient)
+
         } catch (error) {
             console.error('Failed to connect to Redis:', error)
             return new MemoryCacheService()
         }
-
     },
 }

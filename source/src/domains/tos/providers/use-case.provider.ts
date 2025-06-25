@@ -18,7 +18,12 @@ export const useCaseProviders : Provider[] = [
       provide: ProviderName.USE_CASE_UPDATE_USER_TERM,
       inject: [
           ProviderName.ACCEPT_TERM_REPOSITORY,
+          ProviderName.CACHE_SERVICE,
       ],
-        useFactory: (acceptTermRepository: IAcceptTermRepository) => new UpdateUserTermUseCase(acceptTermRepository),
+        useFactory: (
+            acceptTermRepository: IAcceptTermRepository,
+        ) => new UpdateUserTermUseCase(
+            acceptTermRepository,
+        ),
     }
 ]

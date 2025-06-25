@@ -3,6 +3,7 @@ import {
     ClientSession,
     Collection,
     Filter,
+    FindOneAndUpdateOptions,
     ObjectId,
     Sort,
     WithId,
@@ -81,7 +82,7 @@ export abstract class AbstractMongoRepository<M extends IEntity, S extends ISche
 
     public getById(id: string): Observable<M> {
         const filter = <Filter<S>>{
-            _id: new ObjectId(id),
+            _id: this.ensureObjectId(id),
             deletedAt: null,
         }
         return from(this._collection.findOne(filter)).pipe(
@@ -112,7 +113,7 @@ export abstract class AbstractMongoRepository<M extends IEntity, S extends ISche
         }
 
         return from(
-            this._collection.deleteOne(<Filter<S>>{_id: new ObjectId(entity._id)}),
+            this._collection.deleteOne(<Filter<S>>{_id: this.ensureObjectId(entity._id)}),
         ).pipe(map(() => entity))
     }
 
@@ -126,7 +127,7 @@ export abstract class AbstractMongoRepository<M extends IEntity, S extends ISche
     }
 
     public update(entity: M): Observable<M> {
-        const id = entity._id.toString()
+        const id = this.ensureObjectId(entity._id)
         entity.updatedAt = new Date()
         const schema = this.toDocument(entity)
         delete schema._id
@@ -134,12 +135,12 @@ export abstract class AbstractMongoRepository<M extends IEntity, S extends ISche
         return from(
             this._collection.updateOne(
                 // @ts-ignore
-                {_id: new ObjectId(id)},
+                {_id: id},
                 {$set: schema},
             ),
         ).pipe(
             concatMap(() => {
-                return this.findOne({_id: new ObjectId(id)})
+                return this.findOne({_id: id})
             }),
         )
     }
@@ -191,7 +192,7 @@ export abstract class AbstractMongoRepository<M extends IEntity, S extends ISche
         const promise = this._collection.updateOne(
             // @ts-ignore
             {
-                _id: new ObjectId(id),
+                _id: this.ensureObjectId(id),
             },
             {
                 $inc: incrementObject,
@@ -201,13 +202,33 @@ export abstract class AbstractMongoRepository<M extends IEntity, S extends ISche
         return from(promise).pipe(concatMap(() => this.getById(id)))
     }
 
+    public upsert(data: M): Observable<M> {
+        // @ts-ignore
+        const filter: Filter<S> = {
+            _id: data._id,
+        }
+        const schema = this.toDocument(data)
+        schema.updatedAt = new Date()
+        const update = {
+            $set: schema,
+        }
+        const options: FindOneAndUpdateOptions = {
+            upsert: true,
+            returnDocument: 'after',
+        }
+
+        return from(this._collection.findOneAndUpdate(filter, update, options)).pipe(
+            map((res: any) => this.toModel(res)),
+        )
+    }
+
     public decreaseBy(id: string, field: keyof M, value: number): Observable<M> {
         const decrementObject = {}
         decrementObject[String(field)] = -value
         const promise = this._collection.updateOne(
             // @ts-ignore
             {
-                _id: new ObjectId(id),
+                _id: this.ensureObjectId(id),
             },
             {
                 $inc: decrementObject,
@@ -215,5 +236,12 @@ export abstract class AbstractMongoRepository<M extends IEntity, S extends ISche
         )
 
         return from(promise).pipe(concatMap(() => this.getById(id)))
+    }
+
+    protected ensureObjectId(string: string): ObjectId | string {
+        if(ObjectId.isValid(string)) {
+            return new ObjectId(string)
+        }
+        return string
     }
 }
