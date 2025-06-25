@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common'
-import { CardController } from '@domains/card/card.controller'
+import { CardController } from '@domains/card/controllers/card.controller'
 import { TokenizationModule } from '@domains/auth/tokenization.module'
+import { serviceProviders } from '@domains/card/providers/service.provider'
 
 @Module({
     imports: [
@@ -10,6 +11,7 @@ import { TokenizationModule } from '@domains/auth/tokenization.module'
         CardController,
     ],
     providers: [
+        ...serviceProviders,
     ],
     exports: [
     ],
