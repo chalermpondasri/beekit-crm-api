@@ -1,7 +1,4 @@
-import {
-    registerDecorator,
-    ValidationArguments,
-} from 'class-validator'
+import { registerDecorator } from 'class-validator'
 import { NumberUtil } from '@utils/number-util/number.util'
 
 export function IsValidChecksum() {
@@ -11,14 +8,14 @@ export function IsValidChecksum() {
             target: target.constructor,
             propertyName,
             validator: {
-                validate(value: any, validationArguments?: ValidationArguments): boolean {
+                validate(value: any): boolean {
                     try {
                         return NumberUtil.validateCheckSum(value)
                     } catch {
                         return false
                     }
                 },
-                defaultMessage(validationArguments?: ValidationArguments): string {
+                defaultMessage(): string {
                     return `Invalid Checksum for ${propertyName}`
                 },
             }

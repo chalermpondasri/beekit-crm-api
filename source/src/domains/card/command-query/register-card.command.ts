@@ -1,6 +1,4 @@
-import { TransitCardType } from '@domains/card/models/card-type.enum'
 import {
-    IsEnum,
     IsNumberString,
     Length,
     MinLength,
