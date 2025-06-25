@@ -15,8 +15,6 @@ export class TestService implements ITestService{
         private readonly _commandUseCase: ICommandUseCase,
         private readonly _queryUseCase: IQueryUseCase,
         private readonly _acceptTermUseCase: IAcceptTermUseCase,
-        private readonly _clusterCollectionCommandUseCase: ICommandUseCase,
-        private readonly _clusterCollectionQueryUseCase: IQueryUseCase,
     ) {}
     public testCommand(testCommand: TestCommand): Observable<any> {
         return this._acceptTermUseCase.execute().pipe(
@@ -30,13 +28,5 @@ export class TestService implements ITestService{
     public testQuery(id?: string): Observable<any> {
 
         return this._queryUseCase.execute(id)
-    }
-
-    public testClusterCollectionCommand(command: TestCommand): Observable<any> {
-        return this._clusterCollectionCommandUseCase.execute()
-    }
-
-    public testClusterCollectionQuery(id?: string): Observable<any> {
-        return this._clusterCollectionQueryUseCase.execute(id)
     }
 }

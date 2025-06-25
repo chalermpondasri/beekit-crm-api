@@ -31,25 +31,12 @@ export class TestController {
         return this._testService.testQuery(id)
     }
 
-    @Post('/query/cluster-collection')
-    public testClusterCollectionQuery(
-        @Body('id') id: string,
-    ){
-        return this._testService.testClusterCollectionQuery(id)
-    }
 
     @Post('/create')
     public testCommand(
         @Body() body: TestCommand,
     ){
         return this._testService.testCommand(body)
-    }
-
-    @Post('/create/cluster-collection')
-    public testClusterCollectionCommand(
-        @Body() body: TestCommand,
-    ){
-        return this._testService.testClusterCollectionCommand(body)
     }
 
     @Get('/jwt')

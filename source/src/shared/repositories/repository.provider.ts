@@ -9,7 +9,6 @@ import {
 import { IRepositoryMapper } from '@shared/repositories/interfaces/base.repository.interface'
 import { AcceptTermMapper } from '@shared/repositories/term/accept-term.mapper'
 import { AcceptTermRepository } from '@shared/repositories/term/accept-term.repository'
-import { AcceptTermClusterCollectionRepository } from '@shared/repositories/term/accept-term-cluster-collection.repository'
 
 const detectClusterType = async (db: Db) => {
     try {
@@ -71,6 +70,10 @@ export const repositoryProviders: Provider[] = [
             const repository = new AcceptTermRepository(db, mapper)
 
             return repository.setup(async ({collection}) => {
+
+                await collection.createIndex({
+                    _id: 'hashed'
+                })
                 const result = await detectClusterType(db)
 
                 if (result === 'sharded') {
@@ -83,52 +86,6 @@ export const repositoryProviders: Provider[] = [
                 }
 
             })
-        },
-    },
-    {
-        provide: ProviderName.ACCEPT_TERM_CLUSTER_REPOSITORY,
-        inject: [
-            ProviderName.MONGO_CLIENT,
-            ProviderName.MONGO_DATASOURCE,
-            ProviderName.ACCEPT_TERM_MAPPER,
-        ],
-        useFactory: (
-            client: MongoClient,
-            db: Db,
-            mapper: IRepositoryMapper<any, any>,
-        ) => {
-            return new AcceptTermClusterCollectionRepository(db, mapper)
-                .setup(async ({collection}) => {
-                        const result = await detectClusterType(db)
-                        if (result === 'sharded') {
-                            await client.db('admin').command({
-                                shardCollection: `${db.namespace}.${collection.collectionName}`,
-                                key: {
-                                    _id: 'hashed',
-                                },
-                            })
-                        }
-                        const existingCollection = await client.db('admin').command({
-                            listCollections: 1,
-                            filter: {name: collection.collectionName},
-                        })
-                        const hasClusteredIndex = existingCollection.cursor.firstBatch[0]?.options?.clusteredIndex
-
-
-                        if (hasClusteredIndex) {
-                            return
-                        }
-
-                        await client.db('admin').command({
-                            create: collection.collectionName,
-                            clusteredIndex: {
-                                key: {_id: 1},
-                                unique: true,
-                                name: 'cluster_index',
-                            },
-                        })
-                    },
-                )
         },
     },
 ]

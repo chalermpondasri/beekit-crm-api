@@ -28,18 +28,4 @@ export const useCaseProviders: Provider[] = [
         ],
         useFactory: (acceptTermRepository) => new AcceptTermUseCase(acceptTermRepository),
     },
-    {
-        provide: ProviderName.USE_CASE_ACCEPT_TERM_CC,
-        inject: [
-            ProviderName.ACCEPT_TERM_CLUSTER_REPOSITORY
-        ],
-        useFactory: (acceptTermClusterRepository) => new AcceptTermUseCase(acceptTermClusterRepository),
-    },
-    {
-        provide: ProviderName.USE_CASE_ACCEPT_TERM_QUERY_CC,
-        inject: [
-            ProviderName.ACCEPT_TERM_CLUSTER_REPOSITORY
-        ],
-        useFactory: (acceptTermClusterRepository) => new TestQueryUseCase(acceptTermClusterRepository),
-    }
 ]

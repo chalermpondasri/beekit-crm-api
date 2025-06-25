@@ -13,7 +13,6 @@ import {
 import { apiReference } from '@scalar/nestjs-api-reference'
 import { ErrorDto } from '@core/models/error.model'
 import { ILoggerService } from '@core/interfaces/logger.service.interface'
-import * as process from 'node:process'
 
 async function bootstrap() {
     const app = await NestFactory.create(MainModule, {
@@ -78,6 +77,4 @@ async function bootstrap() {
     }
 
 }
-console.log(process.env)
-
 bootstrap()
