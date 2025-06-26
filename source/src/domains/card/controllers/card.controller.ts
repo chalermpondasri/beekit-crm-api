@@ -22,6 +22,7 @@ import {
     IRabbitCardRegistrationService,
 } from '@domains/card/interfaces/service.interface'
 import { ProviderName } from '@core/constants/provider-name.enum'
+import { IRequestContextService } from '@core/interfaces/request-context.service.interface'
 
 @ApiBearerAuth()
 @UseGuards(...[CitizenIdGuard, AcceptTermGuard])
@@ -29,6 +30,8 @@ import { ProviderName } from '@core/constants/provider-name.enum'
 export class CardController {
 
     public constructor(
+        @Inject(ProviderName.REQUEST_CONTEXT_SERVICE)
+        private readonly _requestContextService: IRequestContextService,
         @Inject(ProviderName.RABBIT_CARD_REGISTRATION_SERVICE)
         private readonly _rabbitRegistrationService: IRabbitCardRegistrationService,
         @Inject(ProviderName.EMV_CARD_REGISTRATION_SERVICE)
@@ -45,7 +48,7 @@ export class CardController {
     public registerRabbitCards(
         @Body() payload: RegisterRabbitCardCommand,
     ) {
-        return this._rabbitRegistrationService.registerRabbitCard(payload)
+        return this._rabbitRegistrationService.registerRabbitCard(this._requestContextService.getPsnId(), payload)
     }
     @ApiOperation({
         summary: 'Register EMV card',
@@ -56,7 +59,7 @@ export class CardController {
     public registerEmvCards(
         @Body() payload: RegisterEmvCardCommand,
     ) {
-        return this._emvRegistrationService.registerEmvCard(payload)
+        return this._emvRegistrationService.registerEmvCard(this._requestContextService.getPsnId(), payload)
     }
 
     @ApiOperation({

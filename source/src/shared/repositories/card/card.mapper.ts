@@ -1,10 +1,10 @@
 import {
     CardEntity,
-    CardType,
 } from '@shared/entities/card.entity'
 import { ICardSchema } from '@shared/repositories/card/card.schema'
 import { plainToInstance } from 'class-transformer'
 import { IRepositoryMapper } from '@shared/repositories/interfaces/base.repository.interface'
+import { TransitCardType } from '@domains/card/models/card-type.enum'
 
 export class CardEntityMapper implements IRepositoryMapper<CardEntity, ICardSchema> {
     public deserialize(schema: ICardSchema): CardEntity {
@@ -12,7 +12,7 @@ export class CardEntityMapper implements IRepositoryMapper<CardEntity, ICardSche
             _id: schema._id,
             birthYear: schema.birthYear,
             cardNo: schema.cardNo,
-            cardType: <CardType>schema.cardType,
+            cardType: <TransitCardType>schema.cardType,
             cid: schema.cid,
             createdAt: schema.createdAt,
             deletedAt: schema.deletedAt,

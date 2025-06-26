@@ -1,16 +1,11 @@
 import { AbstractEntity } from '@shared/entities/abstract.entity'
-
-export enum CardType {
-    RABBIT = 'RABBIT',
-    EMV = 'EMV',
-}
-
+import { TransitCardType } from '@domains/card/models/card-type.enum'
 
 export class CardEntity extends AbstractEntity {
     public cid: string
     public cardNo: string
     public hashedCardNumber: string
-    public cardType: CardType
+    public cardType: TransitCardType
 
     public tokenizedMedia: {
         rabbit: string

@@ -42,3 +42,13 @@ export class ErrorDto {
     public errorObject?: any
 
 }
+
+
+export class UseCaseException extends Error {
+    public constructor(
+        message: string
+    )  {
+        super(message)
+        Object.setPrototypeOf(this, UseCaseException.prototype)
+    }
+}
