@@ -1,14 +1,14 @@
 import { ISchema } from '@shared/repositories/base/model.interface'
+import { HashedString } from '@core/types/hashed.type'
 
 export interface ICardSchema extends ISchema {
-    cid: string
+    cid: HashedString
     cardNo: string
+    hashedCardNumber: HashedString
     cardType: string
-    tokenizedMediaId: {
-        rabbit: string
-        ktb: string
-        bem: string
-    }
+    tokenizedMediaIdKtb: HashedString
+    tokenizedMediaIdBem: HashedString
+    tokenizedMediaIdRabbit: HashedString
     birthYear: number
     registeredDate: Date
 }

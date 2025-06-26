@@ -11,7 +11,7 @@ import {
     SwaggerModule,
 } from '@nestjs/swagger'
 import { apiReference } from '@scalar/nestjs-api-reference'
-import { ErrorDto } from '@core/models/error.model'
+import { ErrorDto } from '@core/models/errors/error.model'
 import { ILoggerService } from '@core/interfaces/logger.service.interface'
 import { NoContentInterceptor } from '@core/interceptors/no-content.interceptor'
 

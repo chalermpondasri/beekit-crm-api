@@ -93,6 +93,10 @@ export class EnvironmentConfig {
     @IsNumber()
     @Transform(({ value }) => Number(value))
     public readonly POD_TO_SCALE: number
+
+    @IsNotEmpty()
+    public readonly RABBIT_SECRET: string
+
     public isProduction() {
         return this.APP_ENV === 'production'
     }

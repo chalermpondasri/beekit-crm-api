@@ -4,7 +4,7 @@ import { CreateJwtTokenUseCase } from '@domains/auth/use-cases/create-jwt-token.
 import { AuthenticationUseCase } from '@domains/auth/use-cases/authentication.use-case'
 import { EnvironmentConfig } from '@core/models/environment-config.model'
 import { ProviderName } from '@core/constants/provider-name.enum'
-import { IEGovAdapter } from '@shared/adapters/egov/interfaces/egov.interface'
+import { IEGovAdapter } from '@shared/adapters/interfaces/egov.interface'
 import { ILoggerService } from '@core/interfaces/logger.service.interface'
 
 export const createJwtUseCaseProvider: Provider = {

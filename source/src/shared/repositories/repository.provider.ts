@@ -4,11 +4,13 @@ import { CardRepository } from '@shared/repositories/card/card.repository'
 import { CardEntityMapper } from '@shared/repositories/card/card.mapper'
 import {
     Db,
+    IndexDescription,
     MongoClient,
 } from 'mongodb'
 import { IRepositoryMapper } from '@shared/repositories/interfaces/base.repository.interface'
 import { AcceptTermMapper } from '@shared/repositories/term/accept-term.mapper'
 import { AcceptTermRepository } from '@shared/repositories/term/accept-term.repository'
+import { v4 } from 'uuid'
 
 const detectClusterType = async (db: Db) => {
     try {
@@ -52,7 +54,39 @@ export const repositoryProviders: Provider[] = [
             ProviderName.MONGO_DATASOURCE,
             ProviderName.CARD_ENTITY_MAPPER,
         ],
-        useFactory: (db: Db, mapper: IRepositoryMapper<any, any>) => new CardRepository(db, mapper),
+        useFactory: (db: Db, mapper: IRepositoryMapper<any, any>) => {
+            return new CardRepository(db, mapper).setup(async (context) => {
+                context.idGenerator = () => v4()
+                const indexDescriptions: IndexDescription[] = [
+                    {
+                        key: {
+                            cid: 1,
+                        },
+                    },
+                    {
+                        key: {
+                            hashedCardNumber: 1,
+                        },
+                    },
+                    {
+                        key: {
+                            tokenizedMediaIdRabbit: 1,
+                        },
+                    },
+                    {
+                        key: {
+                            tokenizedMediaIdBem: 1,
+                        },
+                    },
+                    {
+                        key: {
+                            tokenizedMediaIdKtb: 1,
+                        },
+                    },
+                ]
+                await context.collection.createIndexes(indexDescriptions)
+            })
+        },
     },
     {
         provide: ProviderName.ACCEPT_TERM_REPOSITORY,
@@ -72,7 +106,7 @@ export const repositoryProviders: Provider[] = [
             return repository.setup(async ({collection}) => {
 
                 await collection.createIndex({
-                    _id: 'hashed'
+                    _id: 'hashed',
                 })
                 const result = await detectClusterType(db)
 

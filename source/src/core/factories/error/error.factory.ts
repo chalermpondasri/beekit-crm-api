@@ -1,6 +1,6 @@
 import { IErrorFactory } from './interfaces/error.factory.interface'
 import { ApplicationErrorCode } from '../../constants/error-code.enum'
-import { ErrorModel } from '../../models/error.model'
+import { ErrorModel } from '../../models/errors/error.model'
 import { ILocaleErrorMessage } from '../../constants/error-message.constant'
 
 export class ErrorFactoryService implements IErrorFactory {

@@ -1,11 +1,32 @@
-import { CardEntity } from '@shared/entities/card.entity'
+import {
+    CardEntity,
+    CardType,
+} from '@shared/entities/card.entity'
 import { ICardSchema } from '@shared/repositories/card/card.schema'
 import { plainToInstance } from 'class-transformer'
 import { IRepositoryMapper } from '@shared/repositories/interfaces/base.repository.interface'
 
 export class CardEntityMapper implements IRepositoryMapper<CardEntity, ICardSchema> {
     public deserialize(schema: ICardSchema): CardEntity {
-        return plainToInstance(CardEntity, schema)
+        const entitySchema: CardEntity = {
+            _id: schema._id,
+            birthYear: schema.birthYear,
+            cardNo: schema.cardNo,
+            cardType: <CardType>schema.cardType,
+            cid: schema.cid,
+            createdAt: schema.createdAt,
+            deletedAt: schema.deletedAt,
+            hashedCardNumber: schema.hashedCardNumber,
+            registeredDate: schema.registeredDate,
+            tokenizedMedia: {
+                bem: schema.tokenizedMediaIdBem,
+                ktb: schema.tokenizedMediaIdKtb,
+                rabbit: schema.tokenizedMediaIdRabbit,
+            },
+            updatedAt: schema.updatedAt,
+        }
+
+        return plainToInstance(CardEntity, entitySchema)
     }
 
     public serialize(model: CardEntity): ICardSchema {
@@ -13,14 +34,13 @@ export class CardEntityMapper implements IRepositoryMapper<CardEntity, ICardSche
             _id: model._id,
             cid: model.cid,
             cardNo: model.cardNo,
+            hashedCardNumber: model.hashedCardNumber,
             cardType: model.cardType,
             birthYear: model.birthYear,
             registeredDate: model.registeredDate,
-            tokenizedMediaId: {
-                bem: model.tokenizedMedia?.bem,
-                ktb: model.tokenizedMedia?.ktb,
-                rabbit: model.tokenizedMedia?.rabbit
-            },
+            tokenizedMediaIdRabbit: model.tokenizedMedia.rabbit,
+            tokenizedMediaIdBem: model.tokenizedMedia.bem,
+            tokenizedMediaIdKtb: model.tokenizedMedia.ktb,
             createdAt: model.createdAt,
             updatedAt: model.updatedAt,
             deletedAt: model.deletedAt,

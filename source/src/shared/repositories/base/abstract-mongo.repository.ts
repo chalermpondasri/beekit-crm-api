@@ -29,7 +29,7 @@ import {
 
 export interface IRepositorySetupContext<S> {
     collection: Collection<S>
-    idGeneration: () => string
+    idGenerator: () => void
 }
 
 
@@ -39,14 +39,14 @@ export abstract class AbstractMongoRepository<M extends IEntity, S extends ISche
         protected readonly _collection: Collection<S>,
         private readonly _mapper: IRepositoryMapper<M, S>,
         private readonly _session?: ClientSession,
-        private _idGenerationFunction?: () => string
+        private _idGenerator: () => string = null
     ) {
     }
 
     public async setup(setupFn: (context: IRepositorySetupContext<S>) => Promise<void>): Promise<this> {
         await setupFn({
             collection: this._collection,
-            idGeneration: this._idGenerationFunction
+            idGenerator: this._idGenerator || null
         })
 
         return this
@@ -128,8 +128,8 @@ export abstract class AbstractMongoRepository<M extends IEntity, S extends ISche
     }
 
     private _generateIdIfNeeded(schema: S) {
-        if(this._idGenerationFunction && !schema._id) {
-            schema._id = this._idGenerationFunction()
+        if(this._idGenerator && !schema._id) {
+            schema._id = this._idGenerator()
         }
     }
 

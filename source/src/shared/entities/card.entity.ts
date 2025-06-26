@@ -1,6 +1,6 @@
 import { AbstractEntity } from '@shared/entities/abstract.entity'
 
-enum CardType {
+export enum CardType {
     RABBIT = 'RABBIT',
     EMV = 'EMV',
 }
@@ -8,8 +8,8 @@ enum CardType {
 
 export class CardEntity extends AbstractEntity {
     public cid: string
-    public uuid: string
     public cardNo: string
+    public hashedCardNumber: string
     public cardType: CardType
 
     public tokenizedMedia: {

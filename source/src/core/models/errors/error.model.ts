@@ -1,5 +1,5 @@
-import { ISODateTime } from '../types/datestring.type'
-import { ApplicationErrorCode } from '../constants/error-code.enum'
+import { ISODateTime } from '../../types/datestring.type'
+import { ApplicationErrorCode } from '../../constants/error-code.enum'
 import {
     ApiProperty,
 } from '@nestjs/swagger'
