@@ -5,9 +5,9 @@ import {
 import { Observable } from 'rxjs'
 
 export interface IRabbitCardRegistrationService {
-    registerRabbitCard(payload: RegisterRabbitCardCommand): Observable<any>
+    registerRabbitCard(command: RegisterRabbitCardCommand): Observable<any>
 }
 
 export interface IEmvCardRegistrationService {
-    registerEmvCard(payload: RegisterEmvCardCommand): Observable<any>
+    registerEmvCard(command: RegisterEmvCardCommand): Observable<any>
 }

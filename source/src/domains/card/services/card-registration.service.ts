@@ -10,12 +10,12 @@ import {
 } from '@domains/card/command-query/register-card.command'
 
 export class CardRegistrationService implements IRabbitCardRegistrationService, IEmvCardRegistrationService {
-    public registerEmvCard(payload: RegisterEmvCardCommand): Observable<any> {
+    public registerEmvCard(command: RegisterEmvCardCommand): Observable<any> {
         throw new InternalServerErrorException('not implemented')
     }
 
-    public registerRabbitCard(payload: RegisterRabbitCardCommand): Observable<any> {
-        return undefined
+    public registerRabbitCard(command: RegisterRabbitCardCommand): Observable<any> {
+        return
     }
 
 }

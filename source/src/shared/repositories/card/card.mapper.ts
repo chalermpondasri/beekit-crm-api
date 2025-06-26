@@ -11,7 +11,19 @@ export class CardEntityMapper implements IRepositoryMapper<CardEntity, ICardSche
     public serialize(model: CardEntity): ICardSchema {
         return {
             _id: model._id,
+            cid: model.cid,
+            cardNo: model.cardNo,
+            cardType: model.cardType,
+            birthYear: model.birthYear,
+            registeredDate: model.registeredDate,
+            tokenizedMediaId: {
+                bem: model.tokenizedMedia?.bem,
+                ktb: model.tokenizedMedia?.ktb,
+                rabbit: model.tokenizedMedia?.rabbit
+            },
             createdAt: model.createdAt,
+            updatedAt: model.updatedAt,
+            deletedAt: model.deletedAt,
         }
     }
 

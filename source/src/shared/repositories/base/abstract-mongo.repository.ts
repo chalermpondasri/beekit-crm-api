@@ -28,17 +28,28 @@ import {
     SortOpts,
 } from '@shared/repositories/interfaces/base.repository.interface'
 
+export interface IRepositorySetupContext<S> {
+    collection: Collection<S>
+    idGeneration: () => string
+}
+
+
 
 export abstract class AbstractMongoRepository<M extends IEntity, S extends ISchema> implements IRepository<M> {
     protected constructor(
         protected readonly _collection: Collection<S>,
         private readonly _mapper: IRepositoryMapper<M, S>,
         private readonly _session?: ClientSession,
+        private _idGenerationFunction?: () => string
     ) {
     }
 
-    public async setup(setupFn: ({collection}: {collection: Collection<S>}) => Promise<void>): Promise<this> {
-        await setupFn({collection: this._collection})
+    public async setup(setupFn: (context: IRepositorySetupContext<S>) => Promise<void>): Promise<this> {
+        await setupFn({
+            collection: this._collection,
+            idGeneration: this._idGenerationFunction
+        })
+
         return this
     }
 
@@ -117,8 +128,15 @@ export abstract class AbstractMongoRepository<M extends IEntity, S extends ISche
         ).pipe(map(() => entity))
     }
 
+    private _generateIdIfNeeded(schema: S) {
+        if(this._idGenerationFunction && !schema._id) {
+            schema._id = this._idGenerationFunction()
+        }
+    }
+
     public save(entity: M): Observable<string> {
         const doc = this.toDocument(entity)
+        this._generateIdIfNeeded(doc)
 
         // @ts-ignore
         return from(this._collection.insertOne(doc)).pipe(
@@ -200,26 +218,6 @@ export abstract class AbstractMongoRepository<M extends IEntity, S extends ISche
         )
 
         return from(promise).pipe(concatMap(() => this.getById(id)))
-    }
-
-    public upsert(data: M): Observable<M> {
-        // @ts-ignore
-        const filter: Filter<S> = {
-            _id: data._id,
-        }
-        const schema = this.toDocument(data)
-        schema.updatedAt = new Date()
-        const update = {
-            $set: schema,
-        }
-        const options: FindOneAndUpdateOptions = {
-            upsert: true,
-            returnDocument: 'after',
-        }
-
-        return from(this._collection.findOneAndUpdate(filter, update, options)).pipe(
-            map((res: any) => this.toModel(res)),
-        )
     }
 
     public decreaseBy(id: string, field: keyof M, value: number): Observable<M> {
