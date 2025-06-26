@@ -3,7 +3,6 @@ import {
     ClientSession,
     Collection,
     Filter,
-    FindOneAndUpdateOptions,
     ObjectId,
     Sort,
     WithId,
