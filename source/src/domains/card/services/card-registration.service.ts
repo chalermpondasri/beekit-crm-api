@@ -4,6 +4,7 @@ import {
 } from '@domains/card/interfaces/service.interface'
 import {
     catchError,
+    map,
     mergeMap,
     Observable,
     of,
@@ -44,6 +45,7 @@ export class CardRegistrationService implements IRabbitCardRegistrationService, 
                 }
                 return throwError(() => this._errorFactory.createInternalServerError(ApplicationErrorCode.INTERNAL_SERVER_ERROR))
             }),
+            map(() => ({success: true})),
         )
     }
 

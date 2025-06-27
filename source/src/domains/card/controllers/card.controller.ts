@@ -12,6 +12,7 @@ import {
     ApiBearerAuth,
     ApiBody,
     ApiOperation,
+    ApiResponse,
 } from '@nestjs/swagger'
 import {
     RegisterEmvCardCommand,
@@ -23,6 +24,7 @@ import {
 } from '@domains/card/interfaces/service.interface'
 import { ProviderName } from '@core/constants/provider-name.enum'
 import { IRequestContextService } from '@core/interfaces/request-context.service.interface'
+import { RabbitRegisterResponse } from '@domains/card/response/rabbit-register.response'
 
 @ApiBearerAuth()
 @UseGuards(...[CitizenIdGuard, AcceptTermGuard])
@@ -44,16 +46,24 @@ export class CardController {
         description: 'Register a new Rabbit card',
     })
     @ApiBody({type: RegisterRabbitCardCommand})
+    @ApiResponse(
+        {
+            type: RabbitRegisterResponse,
+            status: 201,
+        },
+    )
     @Post('/register/rabbit')
     public registerRabbitCards(
         @Body() payload: RegisterRabbitCardCommand,
     ) {
         return this._rabbitRegistrationService.registerRabbitCard(this._requestContextService.getPsnId(), payload)
     }
+
     @ApiOperation({
         summary: 'Register EMV card',
         description: 'Register a new EMV card',
     })
+
     @ApiBody({type: RegisterEmvCardCommand})
     @Post('/register/emv')
     public registerEmvCards(
