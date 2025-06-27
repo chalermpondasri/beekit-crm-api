@@ -16,7 +16,7 @@ export class NoContentInterceptor implements NestInterceptor {
     public intercept(context: ExecutionContext, next: CallHandler<any>): Observable<any> | Promise<Observable<any>> {
         return next.handle().pipe(
             map( data => {
-                if(isNil(data)) {
+                if(isNil(data) || (Array.isArray(data) && data.length === 0)) {
                     context.switchToHttp()
                         .getResponse<Response>()
                         .status(204)

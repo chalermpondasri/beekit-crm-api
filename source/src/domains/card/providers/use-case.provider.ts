@@ -7,6 +7,7 @@ import { ILoggerService } from '@core/interfaces/logger.service.interface'
 import { IRabbitTransitAdapter } from '@shared/adapters/interfaces/rabbit-transit.interface'
 import { IValidateRabbitCardRegistrationUseCase } from '@domains/card/interfaces/use-case.interface'
 import { ICchAdapter } from '@shared/adapters/interfaces/cch.adapter'
+import { ListUserCardsUseCase } from '@domains/card/use-cases/list-user-cards.use-case'
 
 export const useCaseProviders: Provider[] = [
     {
@@ -41,6 +42,19 @@ export const useCaseProviders: Provider[] = [
                 validateRabbitUseCase,
                 cardRepository,
                 cchAdapter,
+            )
+        }
+    },
+    {
+        provide: ProviderName.USE_CASE_LIST_CARDS,
+        inject: [
+            ProviderName.CARD_REPOSITORY,
+        ],
+        useFactory: (
+            cardRepository: ICardRepository,
+        ) => {
+            return new ListUserCardsUseCase(
+                cardRepository,
             )
         }
     }

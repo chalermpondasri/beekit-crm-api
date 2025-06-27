@@ -19,6 +19,7 @@ import {
     RegisterRabbitCardCommand,
 } from '@domains/card/command-query/register-card.command'
 import {
+    ICardRegistrationService,
     IEmvCardRegistrationService,
     IRabbitCardRegistrationService,
 } from '@domains/card/interfaces/service.interface'
@@ -34,10 +35,8 @@ export class CardController {
     public constructor(
         @Inject(ProviderName.REQUEST_CONTEXT_SERVICE)
         private readonly _requestContextService: IRequestContextService,
-        @Inject(ProviderName.RABBIT_CARD_REGISTRATION_SERVICE)
-        private readonly _rabbitRegistrationService: IRabbitCardRegistrationService,
-        @Inject(ProviderName.EMV_CARD_REGISTRATION_SERVICE)
-        private readonly _emvRegistrationService: IEmvCardRegistrationService,
+        @Inject(ProviderName.CARD_REGISTRATION_SERVICE)
+        private readonly _cardRegistrationService: ICardRegistrationService,
     ) {
     }
 
@@ -56,7 +55,7 @@ export class CardController {
     public registerRabbitCards(
         @Body() payload: RegisterRabbitCardCommand,
     ) {
-        return this._rabbitRegistrationService.registerRabbitCard(this._requestContextService.getPsnId(), payload)
+        return this._cardRegistrationService.registerRabbitCard(this._requestContextService.getPsnId(), payload)
     }
 
     @ApiOperation({
@@ -69,7 +68,7 @@ export class CardController {
     public registerEmvCards(
         @Body() payload: RegisterEmvCardCommand,
     ) {
-        return this._emvRegistrationService.registerEmvCard(this._requestContextService.getPsnId(), payload)
+        return this._cardRegistrationService.registerEmvCard(this._requestContextService.getPsnId(), payload)
     }
 
     @ApiOperation({
@@ -78,6 +77,6 @@ export class CardController {
     })
     @Get('/')
     public getRegisteredCards() {
-        return
+        return this._cardRegistrationService.getRegisteredCards(this._requestContextService.getPsnId())
     }
 }

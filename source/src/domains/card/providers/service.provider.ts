@@ -3,39 +3,29 @@ import { ProviderName } from '@core/constants/provider-name.enum'
 import { CardRegistrationService } from '@domains/card/services/card-registration.service'
 import { IRabbitCardRegistrationService } from '@domains/card/interfaces/service.interface'
 import { IErrorFactory } from '@core/factories/error/interfaces/error.factory.interface'
-import { IRegisterNewRabbitCardUseCase } from '@domains/card/interfaces/use-case.interface'
+import {
+    IListRegisteredCardsUseCase,
+    IRegisterNewRabbitCardUseCase,
+} from '@domains/card/interfaces/use-case.interface'
 
 export const serviceProviders: Provider[] = [
     {
-        provide: ProviderName.RABBIT_CARD_REGISTRATION_SERVICE,
+        provide: ProviderName.CARD_REGISTRATION_SERVICE,
         inject: [
             ProviderName.ERROR_FACTORY_SERVICE,
             ProviderName.USE_CASE_REGISTER_RABBIT_CARD,
+            ProviderName.USE_CASE_LIST_CARDS,
         ],
         useFactory: (
             efs: IErrorFactory,
             registerUseCase: IRegisterNewRabbitCardUseCase,
+            listCardUseCase: IListRegisteredCardsUseCase,
         ): IRabbitCardRegistrationService => {
             return new CardRegistrationService(
                 efs,
                 registerUseCase,
+                listCardUseCase,
             )
         }
     },
-    {
-        provide: ProviderName.EMV_CARD_REGISTRATION_SERVICE,
-        inject: [
-            ProviderName.ERROR_FACTORY_SERVICE,
-            ProviderName.USE_CASE_REGISTER_RABBIT_CARD,
-        ],
-        useFactory: (
-            efs: IErrorFactory,
-            registerUseCase: IRegisterNewRabbitCardUseCase,
-        ): IRabbitCardRegistrationService => {
-            return new CardRegistrationService(
-                efs,
-                registerUseCase,
-            )
-        }
-    }
 ]
