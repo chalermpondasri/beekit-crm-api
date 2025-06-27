@@ -18,11 +18,7 @@ import {
     RegisterEmvCardCommand,
     RegisterRabbitCardCommand,
 } from '@domains/card/command-query/register-card.command'
-import {
-    ICardRegistrationService,
-    IEmvCardRegistrationService,
-    IRabbitCardRegistrationService,
-} from '@domains/card/interfaces/service.interface'
+import { ICardRegistrationService } from '@domains/card/interfaces/service.interface'
 import { ProviderName } from '@core/constants/provider-name.enum'
 import { IRequestContextService } from '@core/interfaces/request-context.service.interface'
 import { RabbitRegisterResponse } from '@domains/card/response/rabbit-register.response'

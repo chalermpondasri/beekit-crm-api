@@ -1,7 +1,6 @@
 import {
     IsNumberString,
     Length,
-    MinLength,
 } from 'class-validator'
 import { IsValidChecksum } from '@core/decorators/validators/is-valid-checksum.decorator'
 import { ApiProperty } from '@nestjs/swagger'
