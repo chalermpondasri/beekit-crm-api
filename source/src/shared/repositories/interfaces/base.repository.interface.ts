@@ -35,7 +35,7 @@ export interface IRepository<T extends IEntity, S extends ISchema = any> {
 
     updateMany(where: FilterOpts<T>, schema: Partial<S>): Observable<number>
 
-    findOne(where: FilterOpts<T>): Observable<T>
+    findOne(where: FilterOpts<T>): Observable<T | null>
     increaseBy(id: string, field: keyof T | string, value: number): Observable<T>
     decreaseBy(id: string, field: keyof T, value: number): Observable<T>
 }

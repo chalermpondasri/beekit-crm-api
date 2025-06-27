@@ -96,6 +96,8 @@ export class EnvironmentConfig {
 
     @IsNotEmpty()
     public readonly RABBIT_SECRET: string
+    @IsNotEmpty()
+    public readonly RABBIT_BASE_URL: string
 
     public isProduction() {
         return this.APP_ENV === 'production'

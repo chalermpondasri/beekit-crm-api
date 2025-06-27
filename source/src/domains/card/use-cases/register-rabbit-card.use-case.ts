@@ -8,7 +8,6 @@ import {
     mergeMap,
     Observable,
     of,
-    throwError,
 } from 'rxjs'
 import {
     CampaignBlockStatus,
@@ -16,10 +15,12 @@ import {
     IRabbitTransitAdapter,
 } from '@shared/adapters/interfaces/rabbit-transit.interface'
 import { ILoggerService } from '@core/interfaces/logger.service.interface'
-import { RabbitRegisterException } from '@core/models/errors/card/rabbit-register.exception'
 import { ICardRepository } from '@shared/repositories/interfaces/card.repository.interface'
 import { CardEntity } from '@shared/entities/card.entity'
-import { TransitCardType } from '@domains/card/models/card-type.enum'
+import {
+    CardRegistrationStatus,
+    TransitCardType,
+} from '@domains/card/models/card-type.enum'
 import { HasherService } from '@utils/hasher.service'
 import { rethrow } from '@nestjs/core/helpers/rethrow'
 import { ICchAdapter } from '@shared/adapters/interfaces/cch.adapter'
@@ -44,7 +45,7 @@ export class RegisterNewRabbitCardUseCase implements IRegisterNewRabbitCardUseCa
             }),
             catchError(err => {
                 this._logger.error(err)
-                return throwError(() => new RabbitRegisterException())
+                return rethrow(err)
             })
         ).pipe(
             mergeMap(result => of(result).pipe(
@@ -56,6 +57,7 @@ export class RegisterNewRabbitCardUseCase implements IRegisterNewRabbitCardUseCa
                     card.cid = HasherService.hashSha256toBase64Url(input.citizenId)
                     card.registeredDate = new Date()
                     card.tokenizedMedia = {rabbit: result.transitToken ,ktb: null, bem: null}
+                    card.registrationStatus = CardRegistrationStatus.COMPLETED
                     return this._cardRepository.save(card)
                 }),
                 catchError(err => {

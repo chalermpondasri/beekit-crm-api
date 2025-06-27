@@ -8,5 +8,6 @@ export class CitizenHasCardException extends UseCaseException {
         public readonly message = 'Citizen already has card registered',
     ) {
         super(message)
+        Object.setPrototypeOf(this, CitizenHasCardException.prototype)
     }
 }

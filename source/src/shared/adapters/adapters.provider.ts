@@ -56,6 +56,8 @@ export const rabbitTransitAdapterProvider: Provider = {
         client: AxiosInstance,
         config: EnvironmentConfig,
     ) => {
+        client.defaults.baseURL = config.RABBIT_BASE_URL
+
         return new RabbitTransitAdapter(
             client,
             config.RABBIT_SECRET,

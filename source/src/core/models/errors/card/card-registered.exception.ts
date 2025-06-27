@@ -8,5 +8,6 @@ export class CardRegisteredException extends UseCaseException {
         public readonly message = 'Card already registered'
     ) {
         super(message)
+        Object.setPrototypeOf(this, CardRegisteredException.prototype)
     }
 }

@@ -3,10 +3,7 @@ import { ProviderName } from '@core/constants/provider-name.enum'
 import { CardRegistrationService } from '@domains/card/services/card-registration.service'
 import { IRabbitCardRegistrationService } from '@domains/card/interfaces/service.interface'
 import { IErrorFactory } from '@core/factories/error/interfaces/error.factory.interface'
-import {
-    IRegisterNewRabbitCardUseCase,
-    IValidateRabbitCardRegistrationUseCase,
-} from '@domains/card/interfaces/use-case.interface'
+import { IRegisterNewRabbitCardUseCase } from '@domains/card/interfaces/use-case.interface'
 
 export const serviceProviders: Provider[] = [
     {

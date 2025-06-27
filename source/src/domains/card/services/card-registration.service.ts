@@ -14,15 +14,12 @@ import {
     RegisterEmvCardCommand,
     RegisterRabbitCardCommand,
 } from '@domains/card/command-query/register-card.command'
-import {
-    IRegisterNewRabbitCardUseCase,
-    IValidateRabbitCardRegistrationUseCase,
-} from '@domains/card/interfaces/use-case.interface'
+import { IRegisterNewRabbitCardUseCase } from '@domains/card/interfaces/use-case.interface'
 import { IErrorFactory } from '@core/factories/error/interfaces/error.factory.interface'
 import { ApplicationErrorCode } from '@core/constants/error-code.enum'
-import { UseCaseException } from '@core/models/errors/error.model'
 import { CardRegisteredException } from '@core/models/errors/card/card-registered.exception'
 import { CitizenHasCardException } from '@core/models/errors/card/citizen-has-card.exception'
+import { UseCaseException } from '@core/models/errors/error.model'
 
 export class CardRegistrationService implements IRabbitCardRegistrationService, IEmvCardRegistrationService {
     public constructor(
@@ -38,7 +35,7 @@ export class CardRegistrationService implements IRabbitCardRegistrationService, 
     public registerRabbitCard(psnId: string, command: RegisterRabbitCardCommand): Observable<any> {
         return of(command).pipe(
             mergeMap(command => this._registerRabbitUseCase.execute({cardId: psnId, citizenId: command.cardNumber})),
-            catchError(err => {
+            catchError((err: UseCaseException) => {
                 if(err instanceof CardRegisteredException) {
                     return throwError(() => this._errorFactory.createBadRequestError(ApplicationErrorCode.CARD_WAS_REGISTERED))
                 }
