@@ -24,6 +24,7 @@ export class CardEntityMapper implements IRepositoryMapper<CardEntity, ICardSche
                 rabbit: schema.tokenizedMediaIdRabbit,
             },
             updatedAt: schema.updatedAt,
+            registrationStatus: schema.registrationStatus,
         }
 
         return plainToInstance(CardEntity, entitySchema)
@@ -44,6 +45,7 @@ export class CardEntityMapper implements IRepositoryMapper<CardEntity, ICardSche
             createdAt: model.createdAt,
             updatedAt: model.updatedAt,
             deletedAt: model.deletedAt,
+            registrationStatus: model.registrationStatus,
         }
     }
 

@@ -1,5 +1,6 @@
 import { ISchema } from '@shared/repositories/base/model.interface'
 import { HashedString } from '@core/types/hashed.type'
+import { CardRegistrationStatus } from '@domains/card/models/card-type.enum'
 
 export interface ICardSchema extends ISchema {
     cid: HashedString
@@ -11,4 +12,5 @@ export interface ICardSchema extends ISchema {
     tokenizedMediaIdRabbit: HashedString
     birthYear: number
     registeredDate: Date
+    registrationStatus: CardRegistrationStatus
 }

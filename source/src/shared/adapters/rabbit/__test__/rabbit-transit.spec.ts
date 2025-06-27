@@ -7,7 +7,7 @@ import { RabbitTransitAdapter } from '@shared/adapters/rabbit/rabbit-transit.ada
 import axios from 'axios'
 import { firstValueFrom } from 'rxjs'
 
-xdescribe('Rabbit Transit', () => {
+describe('Rabbit Transit', () => {
     const rabbitBaseUrl = 'https://uat-cloud-id-api.rabbit.co.th/dga'
     const rabbitSecret = '4cHEj5ZTxsR2U/4W2mTq9nCkhEVIeeJJOnFD1xePpIs='
     let adapter: IRabbitTransitAdapter

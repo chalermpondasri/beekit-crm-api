@@ -6,7 +6,6 @@ export interface IValidateRabbitCardRegistrationUseCase {
     execute(citizenId: string, cardNumber: string): Observable<ValidateRabbitOutput>
 }
 
-
 export interface IRegisterNewRabbitCardUseCase {
     execute(input: RegisterRabbitCardInput): Observable<any>
 }
