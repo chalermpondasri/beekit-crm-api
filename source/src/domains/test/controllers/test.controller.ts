@@ -9,12 +9,13 @@ import {
 import { ITestService } from '@domains/test/interfaces/test.service.interface'
 import { TestCommand } from '@domains/test/command-query/test.command'
 import { CitizenIdGuard } from '@core/guards/citizen-id.guard'
+import { TestService } from '@domains/test/services/test.service'
 
 @UseGuards(CitizenIdGuard)
 @Controller('/test')
 export class TestController {
     public constructor(
-        @Inject('TEST_SERVICE')
+        @Inject(TestService)
         private readonly _testService: ITestService,
     ) {
     }

@@ -29,7 +29,7 @@ import {
 
 export interface IRepositorySetupContext<S> {
     collection: Collection<S>
-    idGenerator: () => void
+    setupIdGenerator: (generator:() => string) => void
 }
 
 
@@ -45,7 +45,9 @@ export abstract class AbstractMongoRepository<M extends IEntity, S extends ISche
     public async setup(setupFn: (context: IRepositorySetupContext<S>) => Promise<void>): Promise<this> {
         await setupFn({
             collection: this._collection,
-            idGenerator: this._idGenerator || null,
+            setupIdGenerator: (generator: () => string) => {
+                this._idGenerator = generator
+            },
         })
 
         return this

@@ -11,6 +11,9 @@ import { IRepositoryMapper } from '@shared/repositories/interfaces/base.reposito
 import { AcceptTermMapper } from '@shared/repositories/term/accept-term.mapper'
 import { AcceptTermRepository } from '@shared/repositories/term/accept-term.repository'
 import { v4 } from 'uuid'
+import { TestRepository } from '@shared/repositories/test/test.repository'
+import { TestMapper } from '@shared/repositories/test/test.mapper'
+import crypto from 'crypto'
 
 const detectClusterType = async (db: Db) => {
     try {
@@ -46,7 +49,6 @@ export const entityMappers: Provider[] = [
     },
 ]
 
-
 export const repositoryProviders: Provider[] = [
     {
         provide: ProviderName.CARD_REPOSITORY,
@@ -56,7 +58,7 @@ export const repositoryProviders: Provider[] = [
         ],
         useFactory: (db: Db, mapper: IRepositoryMapper<any, any>) => {
             return new CardRepository(db, mapper).setup(async (context) => {
-                context.idGenerator = () => v4()
+                context.setupIdGenerator(() => v4())
                 const indexDescriptions: IndexDescription[] = [
                     {
                         key: {
@@ -124,3 +126,36 @@ export const repositoryProviders: Provider[] = [
     },
 ]
 
+export const testRepositoryProviders: Provider = {
+    provide: 'TEST_REPOSITORY',
+    inject: [
+        ProviderName.MONGO_DATASOURCE,
+        TestMapper,
+        ProviderName.MONGO_CLIENT,
+    ],
+    useFactory: async (
+        db: Db,
+        mapper: IRepositoryMapper<any, any>,
+        client: MongoClient,
+        ) => {
+        const repository = new TestRepository(db, mapper)
+        await repository.setup(async (ctx) => {
+            ctx.setupIdGenerator(() => crypto.createHash('sha256').update(v4()).digest('base64url'))
+
+            await ctx.collection.createIndex({
+                _id: 'hashed',
+            })
+            const result = await detectClusterType(db)
+
+            if (result === 'sharded') {
+                await client.db('admin').command({
+                    shardCollection: `${db.namespace}.${ctx.collection.collectionName}`,
+                    key: {
+                        _id: 'hashed',
+                    },
+                })
+            }
+        })
+        return repository
+    },
+}

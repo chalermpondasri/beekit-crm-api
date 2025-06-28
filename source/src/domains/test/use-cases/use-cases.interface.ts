@@ -7,7 +7,3 @@ export interface IQueryUseCase {
 export interface ICommandUseCase {
     execute(): Observable<any>
 }
-
-export interface IAcceptTermUseCase {
-    execute(): Observable<any>
-}

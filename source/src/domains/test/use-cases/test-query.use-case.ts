@@ -4,19 +4,25 @@ import {
     take,
     toArray,
 } from 'rxjs'
-import { IAcceptTermRepository } from '@shared/repositories/interfaces/term.repository.interface'
+import { ITestRepository } from '@shared/repositories/interfaces/test.repository.interface'
+import {
+    Inject,
+    Injectable,
+} from '@nestjs/common'
 
+@Injectable()
 export class TestQueryUseCase implements IQueryUseCase {
     public constructor(
-        private readonly _termRepository: IAcceptTermRepository
+        @Inject('TEST_REPOSITORY')
+        private readonly _testRepository: ITestRepository,
     ) {
     }
     public execute(id?: string): Observable<any> {
         if (id) {
-            return this._termRepository.findOne({_id: id})
+            return this._testRepository.findOne({_id: id})
         }
 
-        return this._termRepository.find().pipe(
+        return this._testRepository.find().pipe(
             take(10),
             toArray(),
         )

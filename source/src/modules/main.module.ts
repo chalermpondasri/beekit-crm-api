@@ -12,6 +12,7 @@ import { TokenizationModule } from '@domains/auth/tokenization.module'
 import { TosModule } from '@domains/tos/tos.module'
 import { CardModule } from '@domains/card/card.module'
 import { RequestContextMiddleware } from '@core/middlewares/request-context.middleware'
+import { TestModule } from '@domains/test/test.module'
 
 @Module({
     imports: [
@@ -20,7 +21,7 @@ import { RequestContextMiddleware } from '@core/middlewares/request-context.midd
         HealthcheckModule,
         AuthModule,
         RepositoryModule,
-        // TestModule,
+        TestModule,
         TosModule,
         CardModule,
     ],
