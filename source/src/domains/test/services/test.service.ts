@@ -2,7 +2,6 @@ import { ITestService } from '@domains/test/interfaces/test.service.interface'
 import {
     map,
     Observable,
-    tap,
 } from 'rxjs'
 import {
     ICommandUseCase,

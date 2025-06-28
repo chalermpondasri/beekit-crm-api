@@ -1,7 +1,5 @@
 import { ICommandUseCase } from '@domains/test/use-cases/use-cases.interface'
 import { Observable } from 'rxjs'
-import crypto from 'crypto'
-import { v4 } from 'uuid'
 import { TestEntity } from '@shared/entities/test.entity'
 import { ITestRepository } from '@shared/repositories/interfaces/test.repository.interface'
 import {
