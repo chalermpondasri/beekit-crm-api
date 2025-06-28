@@ -7,7 +7,7 @@ import {
 import {
     ErrorDto,
     ErrorModel,
-} from '../models/error.model'
+} from '../models/errors/error.model'
 import { ILoggerService } from '@core/interfaces/logger.service.interface'
 import { EnvironmentConfig } from '@core/models/environment-config.model'
 import { IAccessLoggerService } from '@core/interfaces/access-logger.service.interface'

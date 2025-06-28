@@ -12,7 +12,7 @@ import {
     IEGovAdapter,
     IVerifyMTokenRequest,
     IVerifyMTokenResponse,
-} from './interfaces/egov.interface'
+} from '@shared/adapters/interfaces/egov.interface'
 import { ILoggerService } from '@core/interfaces/logger.service.interface'
 
 export class EGovAdapter implements IEGovAdapter {

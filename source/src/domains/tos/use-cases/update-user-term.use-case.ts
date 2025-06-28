@@ -6,7 +6,7 @@ import {
     of,
 } from 'rxjs'
 import { UpdateUserTermInput } from '../input-output/update-user-term.input'
-import { HasherService } from '@domains/tos/services/hasher.service'
+import { HasherService } from '@utils/hasher.service'
 import { IAcceptTermRepository } from '@shared/repositories/interfaces/term.repository.interface'
 import { AcceptedTermOutput } from '@domains/tos/input-output/accepted-term.output'
 import { AcceptTermEntity } from '@shared/entities/accept-term.entity'

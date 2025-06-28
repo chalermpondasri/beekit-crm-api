@@ -12,7 +12,7 @@ import { plainToInstance } from 'class-transformer'
 import {
     IEGovAdapter,
     IVerifyMTokenRequest,
-} from '@shared/adapters/egov/interfaces/egov.interface'
+} from '@shared/adapters/interfaces/egov.interface'
 import { EnvironmentConfig } from '@core/models/environment-config.model'
 import { extractAppIndicator } from '@utils/app-indicator-extractor.util'
 import { ILoggerService } from '@core/interfaces/logger.service.interface'

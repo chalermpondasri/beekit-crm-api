@@ -3,7 +3,6 @@ import {
     ClientSession,
     Collection,
     Filter,
-    FindOneAndUpdateOptions,
     ObjectId,
     Sort,
     WithId,
@@ -28,17 +27,27 @@ import {
     SortOpts,
 } from '@shared/repositories/interfaces/base.repository.interface'
 
+export interface IRepositorySetupContext<S> {
+    collection: Collection<S>
+    idGenerator: () => void
+}
+
 
 export abstract class AbstractMongoRepository<M extends IEntity, S extends ISchema> implements IRepository<M> {
     protected constructor(
         protected readonly _collection: Collection<S>,
         private readonly _mapper: IRepositoryMapper<M, S>,
         private readonly _session?: ClientSession,
+        private _idGenerator: () => string = null,
     ) {
     }
 
-    public async setup(setupFn: ({collection}: {collection: Collection<S>}) => Promise<void>): Promise<this> {
-        await setupFn({collection: this._collection})
+    public async setup(setupFn: (context: IRepositorySetupContext<S>) => Promise<void>): Promise<this> {
+        await setupFn({
+            collection: this._collection,
+            idGenerator: this._idGenerator || null,
+        })
+
         return this
     }
 
@@ -54,7 +63,7 @@ export abstract class AbstractMongoRepository<M extends IEntity, S extends ISche
 
         if (Object(source).constructor === Promise) {
             return from(source).pipe(
-                map((document: S) => this.toModel(document))
+                map((document: S) => this.toModel(document)),
             )
         }
         return new Observable((observer: Observer<M>) => {
@@ -117,8 +126,15 @@ export abstract class AbstractMongoRepository<M extends IEntity, S extends ISche
         ).pipe(map(() => entity))
     }
 
+    private _generateIdIfNeeded(schema: S) {
+        if (this._idGenerator && !schema._id) {
+            schema._id = this._idGenerator()
+        }
+    }
+
     public save(entity: M): Observable<string> {
         const doc = this.toDocument(entity)
+        this._generateIdIfNeeded(doc)
 
         // @ts-ignore
         return from(this._collection.insertOne(doc)).pipe(
@@ -180,10 +196,15 @@ export abstract class AbstractMongoRepository<M extends IEntity, S extends ISche
         return from(this._collection.updateMany(<Filter<S>>filter, {$set: update})).pipe(map((res) => res.modifiedCount))
     }
 
-    public findOne(where: FilterOpts<M> = {}): Observable<M> {
+    public findOne(where: FilterOpts<M> = {}): Observable<M | null> {
         const filter = {...where, deletedAt: null}
         // @ts-ignore
-        return from(this._collection.findOne(filter)).pipe(map((data: any) => this.toModel(data)))
+        return from(this._collection.findOne(filter))
+            .pipe(
+                map((data: any) => {
+                    return !data ? null : this.toModel(data)
+                }),
+            )
     }
 
     public increaseBy(id: string, field: keyof M | string, value: number): Observable<M> {
@@ -200,26 +221,6 @@ export abstract class AbstractMongoRepository<M extends IEntity, S extends ISche
         )
 
         return from(promise).pipe(concatMap(() => this.getById(id)))
-    }
-
-    public upsert(data: M): Observable<M> {
-        // @ts-ignore
-        const filter: Filter<S> = {
-            _id: data._id,
-        }
-        const schema = this.toDocument(data)
-        schema.updatedAt = new Date()
-        const update = {
-            $set: schema,
-        }
-        const options: FindOneAndUpdateOptions = {
-            upsert: true,
-            returnDocument: 'after',
-        }
-
-        return from(this._collection.findOneAndUpdate(filter, update, options)).pipe(
-            map((res: any) => this.toModel(res)),
-        )
     }
 
     public decreaseBy(id: string, field: keyof M, value: number): Observable<M> {
@@ -239,7 +240,7 @@ export abstract class AbstractMongoRepository<M extends IEntity, S extends ISche
     }
 
     protected ensureObjectId(string: string): ObjectId | string {
-        if(ObjectId.isValid(string)) {
+        if (ObjectId.isValid(string)) {
             return new ObjectId(string)
         }
         return string

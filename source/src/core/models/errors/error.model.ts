@@ -1,5 +1,5 @@
-import { ISODateTime } from '../types/datestring.type'
-import { ApplicationErrorCode } from '../constants/error-code.enum'
+import { ISODateTime } from '../../types/datestring.type'
+import { ApplicationErrorCode } from '../../constants/error-code.enum'
 import {
     ApiProperty,
 } from '@nestjs/swagger'
@@ -41,4 +41,14 @@ export class ErrorDto {
     @ApiProperty()
     public errorObject?: any
 
+}
+
+
+export class UseCaseException extends Error {
+    public constructor(
+        message: string
+    )  {
+        super(message)
+        Object.setPrototypeOf(this, UseCaseException.prototype)
+    }
 }

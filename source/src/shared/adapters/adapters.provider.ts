@@ -8,6 +8,7 @@ import http from 'http'
 import { EnvironmentConfig } from '@core/models/environment-config.model'
 import { ILoggerService } from '@core/interfaces/logger.service.interface'
 import { EGovAdapter } from './egov/egov.adapter'
+import { RabbitTransitAdapter } from '@shared/adapters/rabbit/rabbit-transit.adapter'
 
 export const httpClientProvider: Provider = {
     provide: ProviderName.HTTP_CLIENT,
@@ -43,5 +44,24 @@ export const eGovAdapterProvider: Provider = {
             logger.setContext(ProviderName.EGOV_ADAPTER),
         )
     },
+}
+
+export const rabbitTransitAdapterProvider: Provider = {
+    provide: ProviderName.RABBIT_TRANSIT_ADAPTER,
+    inject: [
+        ProviderName.HTTP_CLIENT,
+        ProviderName.ENVIRONMENT_CONFIG,
+    ],
+    useFactory: (
+        client: AxiosInstance,
+        config: EnvironmentConfig,
+    ) => {
+        client.defaults.baseURL = config.RABBIT_BASE_URL
+
+        return new RabbitTransitAdapter(
+            client,
+            config.RABBIT_SECRET,
+        )
+    }
 }
 

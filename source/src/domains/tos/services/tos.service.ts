@@ -18,7 +18,7 @@ import { UpdateUserTermCommand } from '@domains/tos/command-query/update-user-te
 import { ApplicationErrorCode } from '@core/constants/error-code.enum'
 import { IErrorFactory } from '@core/factories/error/interfaces/error.factory.interface'
 import { ICacheService } from '@core/interfaces/cache.service.interface'
-import { HasherService } from '@domains/tos/services/hasher.service'
+import { HasherService } from '@utils/hasher.service'
 
 interface ICacheResult {
     accepted: string | null
