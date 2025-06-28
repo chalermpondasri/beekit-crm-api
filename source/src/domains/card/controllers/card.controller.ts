@@ -22,6 +22,7 @@ import { ICardRegistrationService } from '@domains/card/interfaces/service.inter
 import { ProviderName } from '@core/constants/provider-name.enum'
 import { IRequestContextService } from '@core/interfaces/request-context.service.interface'
 import { RabbitRegisterResponse } from '@domains/card/response/rabbit-register.response'
+import { CardResponse } from '@domains/card/response/card.response'
 
 @ApiBearerAuth()
 @UseGuards(...[CitizenIdGuard, AcceptTermGuard])
@@ -70,6 +71,15 @@ export class CardController {
     @ApiOperation({
         summary: 'List cards',
         description: 'List all registered cards',
+    })
+    @ApiResponse({
+        description: 'List of cards',
+        type: [CardResponse],
+        status: 200,
+    })
+    @ApiResponse({
+        description: 'No cards found',
+        status: 204,
     })
     @Get('/')
     public getRegisteredCards() {
