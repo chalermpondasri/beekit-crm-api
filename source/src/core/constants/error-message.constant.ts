@@ -30,4 +30,8 @@ export const errorMessages: Record<Code, ILocaleErrorMessage> = {
         title: 'Error',
         message: 'Card was registered',
     },
+    [Code.CARD_NOT_FOUND]: {
+        title: 'Card Not Found',
+        message: 'Card Not Found',
+    }
 }

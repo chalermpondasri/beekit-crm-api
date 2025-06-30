@@ -1,7 +1,3 @@
-import {
-    IRegisterNewRabbitCardUseCase,
-    IValidateRabbitCardRegistrationUseCase,
-} from '@domains/card/interfaces/use-case.interface'
 import { RegisterRabbitCardInput } from '@domains/card/use-cases/input-output/register-rabbit-card.input'
 import {
     catchError,
@@ -25,19 +21,22 @@ import { HasherService } from '@utils/hasher.service'
 import { rethrow } from '@nestjs/core/helpers/rethrow'
 import { ICchAdapter } from '@shared/adapters/interfaces/cch.adapter'
 import { toThaiBuddhistEraDateString } from '@utils/thai-date-parser/thai-date-parser'
+import { IUseCase } from '@shared/interfaces/use-case.interface'
+import { ValidateRabbitInput } from '@domains/card/use-cases/input-output/validate-rabbit.input'
+import { ValidateRabbitOutput } from '@domains/card/use-cases/input-output/validate-rabbit.output'
 
-export class RegisterNewRabbitCardUseCase implements IRegisterNewRabbitCardUseCase {
+export class RegisterNewRabbitCardUseCase implements IUseCase<RegisterRabbitCardInput, any> {
     public constructor(
         private readonly _logger: ILoggerService,
         private readonly _rabbitTransitAdapter: IRabbitTransitAdapter,
-        private readonly _validateUseCase: IValidateRabbitCardRegistrationUseCase,
+        private readonly _validateUseCase: IUseCase<ValidateRabbitInput, ValidateRabbitOutput>,
         private readonly _cardRepository: ICardRepository,
         private readonly _cchAdapter: ICchAdapter,
     ) {
         this._logger.setContext(RegisterNewRabbitCardUseCase.name)
     }
     public execute(input: RegisterRabbitCardInput): Observable<any> {
-        return this._validateUseCase.execute(input.citizenId, input.cardId).pipe(
+        return this._validateUseCase.execute(new ValidateRabbitInput({citizenId: input.citizenId, cardNumber: input.cardId})).pipe(
             mergeMap(() => {
                 return this._rabbitTransitAdapter.registerSelectedCard({
                     cardId: input.cardId,

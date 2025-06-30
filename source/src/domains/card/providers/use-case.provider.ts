@@ -5,9 +5,10 @@ import { ValidateRabbitCardRegistrationUseCase } from '@domains/card/use-cases/v
 import { RegisterNewRabbitCardUseCase } from '@domains/card/use-cases/register-rabbit-card.use-case'
 import { ILoggerService } from '@core/interfaces/logger.service.interface'
 import { IRabbitTransitAdapter } from '@shared/adapters/interfaces/rabbit-transit.interface'
-import { IValidateRabbitCardRegistrationUseCase } from '@domains/card/interfaces/use-case.interface'
 import { ICchAdapter } from '@shared/adapters/interfaces/cch.adapter'
 import { ListUserCardsUseCase } from '@domains/card/use-cases/list-user-cards.use-case'
+import { IUseCase } from '@shared/interfaces/use-case.interface'
+import { UnregisterCardUseCase } from '@domains/card/use-cases/unregister-card.use-case'
 
 export const useCaseProviders: Provider[] = [
     {
@@ -32,7 +33,7 @@ export const useCaseProviders: Provider[] = [
         useFactory: (
             logger: ILoggerService,
             rabbitTransitAdapter: IRabbitTransitAdapter,
-            validateRabbitUseCase: IValidateRabbitCardRegistrationUseCase,
+            validateRabbitUseCase: IUseCase<any, any>,
             cardRepository: ICardRepository,
             cchAdapter: ICchAdapter,
         ) => {
@@ -55,6 +56,22 @@ export const useCaseProviders: Provider[] = [
         ) => {
             return new ListUserCardsUseCase(
                 cardRepository,
+            )
+        }
+    },
+    {
+        provide: ProviderName.USE_CASE_UNREGISTER_CARD,
+        inject: [
+            ProviderName.CARD_REPOSITORY,
+            ProviderName.RABBIT_TRANSIT_ADAPTER,
+        ],
+        useFactory: (
+            cardRepository: ICardRepository,
+            rabbitTransitAdapter: IRabbitTransitAdapter,
+        ) => {
+            return new UnregisterCardUseCase(
+                cardRepository,
+                rabbitTransitAdapter,
             )
         }
     }

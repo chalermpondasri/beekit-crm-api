@@ -1,4 +1,3 @@
-import { IValidateRabbitCardRegistrationUseCase } from '@domains/card/interfaces/use-case.interface'
 import {
     map,
     mergeMap,
@@ -12,14 +11,17 @@ import { HasherService } from '@utils/hasher.service'
 import { TransitCardType } from '@domains/card/models/card-type.enum'
 import { CitizenHasCardException } from '@core/models/errors/card/citizen-has-card.exception'
 import { CardRegisteredException } from '@core/models/errors/card/card-registered.exception'
+import { IUseCase } from '@shared/interfaces/use-case.interface'
+import { ValidateRabbitInput } from '@domains/card/use-cases/input-output/validate-rabbit.input'
 
-export class ValidateRabbitCardRegistrationUseCase implements IValidateRabbitCardRegistrationUseCase {
+export class ValidateRabbitCardRegistrationUseCase implements IUseCase<ValidateRabbitInput, ValidateRabbitOutput> {
     public constructor(
         private readonly _cardRepository: ICardRepository,
     ) {
     }
 
-    public execute(citizenId: string, cardNumber: string): Observable<ValidateRabbitOutput> {
+    public execute(data: ValidateRabbitInput): Observable<ValidateRabbitOutput> {
+        const {citizenId, cardNumber} = data
         return this._checkIfUserAlreadyHasRabbitCardRegistered(citizenId, new ValidateRabbitOutput()).pipe(
             mergeMap(result => {
                 if(result.citizenAlreadyHasCard) {

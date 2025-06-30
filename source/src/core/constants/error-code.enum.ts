@@ -5,5 +5,6 @@ export enum ApplicationErrorCode {
     TERM_VERSION_MISMATCH = '400001',
     CARD_MAX_TYPE_ALLOWED = '400100',
     CARD_WAS_REGISTERED = '400101',
+    CARD_NOT_FOUND = '404104',
 
 }

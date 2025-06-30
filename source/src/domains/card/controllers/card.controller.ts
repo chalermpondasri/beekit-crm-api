@@ -1,6 +1,7 @@
 import {
     Body,
     Controller,
+    Delete,
     Get,
     Inject,
     Post,
@@ -24,6 +25,7 @@ import { ProviderName } from '@core/constants/provider-name.enum'
 import { IRequestContextService } from '@core/interfaces/request-context.service.interface'
 import { RabbitRegisterResponse } from '@domains/card/response/rabbit-register.response'
 import { CardResponse } from '@domains/card/response/card.response'
+import { UnregisterCardCommand } from '@domains/card/command-query/unregister-card.command'
 
 @ApiBearerAuth()
 @UseGuards(...[CitizenIdGuard, AcceptTermGuard])
@@ -95,5 +97,26 @@ export class CardController {
     @Get('/')
     public getRegisteredCards() {
         return this._cardRegistrationService.getRegisteredCards(this._requestContextService.getPsnId())
+    }
+
+
+    @ApiOperation({
+        summary: 'Unregister card',
+        description: 'Unregister a card',
+    })
+    @ApiBody({type: UnregisterCardCommand})
+    @ApiResponse({
+        description: 'Card unregistered',
+        status: 200,
+    })
+    @ApiResponse({
+        description: 'Card not found',
+        status: 404,
+    })
+    @Delete('/')
+    public unregisterCard(
+        @Body() payload: UnregisterCardCommand,
+    ) {
+        return this._cardRegistrationService.unregisterCard(this._requestContextService.getPsnId(), payload)
     }
 }
