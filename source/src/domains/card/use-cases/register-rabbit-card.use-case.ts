@@ -24,6 +24,7 @@ import {
 import { HasherService } from '@utils/hasher.service'
 import { rethrow } from '@nestjs/core/helpers/rethrow'
 import { ICchAdapter } from '@shared/adapters/interfaces/cch.adapter'
+import { toThaiBuddhistEraDateString } from '@utils/thai-date-parser/thai-date-parser'
 
 export class RegisterNewRabbitCardUseCase implements IRegisterNewRabbitCardUseCase {
     public constructor(
@@ -49,15 +50,20 @@ export class RegisterNewRabbitCardUseCase implements IRegisterNewRabbitCardUseCa
             })
         ).pipe(
             mergeMap(result => of(result).pipe(
+
                 mergeMap(result => {
+                    const birthYear =  toThaiBuddhistEraDateString(input.birthDate).split('/').pop()
                     const card = new CardEntity()
-                    card.cardType = TransitCardType.RABBIT
+
+                    card.cardType = TransitCardType.ABT
                     card.cardNo = result.cardId
                     card.hashedCardNumber = HasherService.hashSha256toBase64Url(result.cardId)
                     card.cid = HasherService.hashSha256toBase64Url(input.citizenId)
                     card.registeredDate = new Date()
                     card.tokenizedMedia = {rabbit: result.transitToken ,ktb: null, bem: null}
                     card.registrationStatus = CardRegistrationStatus.COMPLETED
+                    card.birthYear = Number(birthYear)
+
                     return this._cardRepository.save(card)
                 }),
                 catchError(err => {

@@ -10,8 +10,7 @@ import {
 } from 'rxjs'
 import { InternalServerErrorException } from '@nestjs/common'
 import {
-    RegisterEmvCardCommand,
-    RegisterRabbitCardCommand,
+    RegisterCardCommandWithOptions,
 } from '@domains/card/command-query/register-card.command'
 import {
     IListRegisteredCardsUseCase,
@@ -36,32 +35,37 @@ export class CardRegistrationService implements ICardRegistrationService {
     public getRegisteredCards(citizenId: string): Observable<CardResponse[]> {
         return this._listCardUseCase.execute(citizenId).pipe(
             map(output => {
-                const response:CardResponse = {
+                const response: CardResponse = {
                     id: output.id,
                     cardNumber: output.cardNumber,
                     registeredAt: output.registeredAt,
                     cardType: output.cardType,
-                    status: output.status
+                    status: output.status,
                 }
 
                 return plainToInstance(CardResponse, response)
             }),
-            toArray()
+            toArray(),
         )
     }
 
-    public registerEmvCard(psnId: string, command: RegisterEmvCardCommand): Observable<any> {
+    public registerEmvCard(psnId: string, command: RegisterCardCommandWithOptions): Observable<any> {
         throw new InternalServerErrorException('not implemented')
     }
 
-    public registerRabbitCard(psnId: string, command: RegisterRabbitCardCommand): Observable<any> {
+    public registerRabbitCard(psnId: string, command: RegisterCardCommandWithOptions): Observable<any> {
         return of(command).pipe(
-            mergeMap(command => this._registerRabbitUseCase.execute({cardId: command.cardNumber, citizenId: psnId})),
+            mergeMap(command => this._registerRabbitUseCase.execute({
+                    cardId: command.cardNumber,
+                    citizenId: psnId,
+                    birthDate: command.birthDate,
+                },
+            )),
             catchError((err: UseCaseException) => {
-                if(err instanceof CardRegisteredException) {
+                if (err instanceof CardRegisteredException) {
                     return throwError(() => this._errorFactory.createBadRequestError(ApplicationErrorCode.CARD_WAS_REGISTERED))
                 }
-                if(err instanceof CitizenHasCardException) {
+                if (err instanceof CitizenHasCardException) {
                     return throwError(() => this._errorFactory.createBadRequestError(ApplicationErrorCode.CARD_MAX_TYPE_ALLOWED))
                 }
                 return throwError(() => this._errorFactory.createInternalServerError(ApplicationErrorCode.INTERNAL_SERVER_ERROR))

@@ -23,3 +23,5 @@ export class RegisterEmvCardCommand {
     @Length(16,16)
     public cardNumber: string
 }
+
+export type RegisterCardCommandWithOptions =( RegisterRabbitCardCommand | RegisterEmvCardCommand) & {birthDate: Date}

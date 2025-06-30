@@ -1,16 +1,15 @@
 import {
-    RegisterEmvCardCommand,
-    RegisterRabbitCardCommand,
+    RegisterCardCommandWithOptions,
 } from '@domains/card/command-query/register-card.command'
 import { Observable } from 'rxjs'
 import { CardResponse } from '@domains/card/response/card.response'
 
 export interface IRabbitCardRegistrationService {
-    registerRabbitCard(psnId: string,command: RegisterRabbitCardCommand): Observable<{success: boolean}>
+    registerRabbitCard(psnId: string,command: RegisterCardCommandWithOptions): Observable<{success: boolean}>
 }
 
 export interface IEmvCardRegistrationService {
-    registerEmvCard(psnId: string, command: RegisterEmvCardCommand): Observable<{success: boolean}>
+    registerEmvCard(psnId: string, command: RegisterCardCommandWithOptions): Observable<{success: boolean}>
 }
 
 export interface ICardRegistrationService extends IRabbitCardRegistrationService, IEmvCardRegistrationService {

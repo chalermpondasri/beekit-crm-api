@@ -15,6 +15,7 @@ import {
     ApiResponse,
 } from '@nestjs/swagger'
 import {
+    RegisterCardCommandWithOptions,
     RegisterEmvCardCommand,
     RegisterRabbitCardCommand,
 } from '@domains/card/command-query/register-card.command'
@@ -52,7 +53,12 @@ export class CardController {
     public registerRabbitCards(
         @Body() payload: RegisterRabbitCardCommand,
     ) {
-        return this._cardRegistrationService.registerRabbitCard(this._requestContextService.getPsnId(), payload)
+        const data: RegisterCardCommandWithOptions = {
+            ...payload,
+            birthDate: this._requestContextService.getBirthDate(),
+        }
+        return this._cardRegistrationService.registerRabbitCard(this._requestContextService.getPsnId(), data,
+        )
     }
 
     @ApiOperation({
@@ -65,7 +71,12 @@ export class CardController {
     public registerEmvCards(
         @Body() payload: RegisterEmvCardCommand,
     ) {
-        return this._cardRegistrationService.registerEmvCard(this._requestContextService.getPsnId(), payload)
+        const data : RegisterCardCommandWithOptions = {
+            ...payload,
+            birthDate: this._requestContextService.getBirthDate(),
+
+        }
+        return this._cardRegistrationService.registerEmvCard(this._requestContextService.getPsnId(), data)
     }
 
     @ApiOperation({
