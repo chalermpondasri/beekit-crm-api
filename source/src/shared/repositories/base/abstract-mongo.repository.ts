@@ -120,7 +120,7 @@ export abstract class AbstractMongoRepository<M extends IEntity, S extends ISche
     public delete(entity: M, deleteOptions: IDeleteOptions): Observable<M> {
         if (deleteOptions?.softDelete) {
             entity.deletedAt = new Date()
-            return this.update(entity)
+            return this.update(entity, true)
         }
 
         return from(
@@ -144,7 +144,7 @@ export abstract class AbstractMongoRepository<M extends IEntity, S extends ISche
         )
     }
 
-    public update(entity: M): Observable<M> {
+    public update(entity: M, showDeleted: boolean = false): Observable<M> {
         const id = this.ensureObjectId(entity._id)
         entity.updatedAt = new Date()
         const schema = this.toDocument(entity)
@@ -158,7 +158,7 @@ export abstract class AbstractMongoRepository<M extends IEntity, S extends ISche
             ),
         ).pipe(
             concatMap(() => {
-                return this.findOne({_id: id})
+                return this.findOne({_id: id, deletedAt: showDeleted ? {$ne: null} : null})
             }),
         )
     }
@@ -199,7 +199,7 @@ export abstract class AbstractMongoRepository<M extends IEntity, S extends ISche
     }
 
     public findOne(where: FilterOpts<M> = {}): Observable<M | null> {
-        const filter = {...where, deletedAt: null}
+        const filter = { deletedAt: null, ...where}
         // @ts-ignore
         return from(this._collection.findOne(filter))
             .pipe(

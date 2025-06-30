@@ -9,13 +9,7 @@ import {
     toArray,
 } from 'rxjs'
 import { InternalServerErrorException } from '@nestjs/common'
-import {
-    RegisterCardCommandWithOptions,
-} from '@domains/card/command-query/register-card.command'
-import {
-    IListRegisteredCardsUseCase,
-    IRegisterNewRabbitCardUseCase,
-} from '@domains/card/interfaces/use-case.interface'
+import { RegisterCardCommandWithOptions } from '@domains/card/command-query/register-card.command'
 import { IErrorFactory } from '@core/factories/error/interfaces/error.factory.interface'
 import { ApplicationErrorCode } from '@core/constants/error-code.enum'
 import { CardRegisteredException } from '@core/models/errors/card/card-registered.exception'
@@ -23,12 +17,19 @@ import { CitizenHasCardException } from '@core/models/errors/card/citizen-has-ca
 import { UseCaseException } from '@core/models/errors/error.model'
 import { CardResponse } from '@domains/card/response/card.response'
 import { plainToInstance } from 'class-transformer'
+import { UnregisterCardCommand } from '@domains/card/command-query/unregister-card.command'
+import { IUseCase } from '@shared/interfaces/use-case.interface'
+import { RegisterRabbitCardInput } from '@domains/card/use-cases/input-output/register-rabbit-card.input'
+import { CardOutput } from '@domains/card/use-cases/input-output/card.output'
+import { UnregisterCardInput } from '@domains/card/use-cases/input-output/unregister-card.input'
+import { CardNotFoundException } from '@core/models/errors/card/card-not-found.exception'
 
 export class CardRegistrationService implements ICardRegistrationService {
     public constructor(
         private readonly _errorFactory: IErrorFactory,
-        private readonly _registerRabbitUseCase: IRegisterNewRabbitCardUseCase,
-        private readonly _listCardUseCase: IListRegisteredCardsUseCase,
+        private readonly _registerRabbitUseCase: IUseCase<RegisterRabbitCardInput, any>,
+        private readonly _listCardUseCase: IUseCase<string, CardOutput>,
+        private readonly _unregisterCardUseCase: IUseCase<UnregisterCardInput, any>
     ) {
     }
 
@@ -72,6 +73,21 @@ export class CardRegistrationService implements ICardRegistrationService {
             }),
             map(() => ({success: true})),
         )
+    }
+    public unregisterCard(psnId: string, command: UnregisterCardCommand): Observable<{ success: boolean }> {
+        return this._unregisterCardUseCase.execute(new UnregisterCardInput({
+            cardId: command.cardId,
+            citizenId: psnId,
+        })).pipe(
+            map(() => ({success: true})),
+            catchError(err => {
+                if(err instanceof CardNotFoundException) {
+                    return throwError(() => this._errorFactory.createNotfoundError(ApplicationErrorCode.CARD_NOT_FOUND))
+                }
+                return throwError(() => this._errorFactory.createInternalServerError(ApplicationErrorCode.INTERNAL_SERVER_ERROR))
+            })
+        )
+
     }
 
 }

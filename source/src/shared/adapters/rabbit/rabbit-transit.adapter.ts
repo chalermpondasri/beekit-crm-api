@@ -13,7 +13,9 @@ import {
     Observable,
     of,
 } from 'rxjs'
-import { AxiosInstance } from 'axios'
+import {
+    AxiosInstance,
+} from 'axios'
 import qs from 'qs'
 import crypto from 'crypto'
 import * as console from 'node:console'
@@ -104,9 +106,12 @@ export class RabbitTransitAdapter implements IRabbitTransitAdapter {
     public updateCardStatus(updateCard: IUpdateCard): Observable<ICardResponse> {
         return of(updateCard).pipe(
             map(card => {
+
+                const cardId = card.cardId.substring(0, 12)
+
                 return {
                     transit_token: card.transitToken,
-                    card_id: card.cardId,
+                    card_id: cardId,
                     campaign_register_status: card.campaignRegisterStatus,
                     campaign_block_status: card.campaignBlockStatus,
                 }
@@ -117,13 +122,13 @@ export class RabbitTransitAdapter implements IRabbitTransitAdapter {
                 const response: ICardResponse = {
                     campaignBlockStatus: card_info?.campaign_block_status,
                     campaignRegisterStatus: card_info?.campaign_register_status,
-                    cardId: card_info?.card_id,
+                    cardId: updateCard.cardId,
                     transitToken: card_info?.transit_token,
                 }
                 return response
             }),
             catchError(err => {
-                console.error(err)
+                console.error(err.body)
                 rethrow(err)
             })
         )

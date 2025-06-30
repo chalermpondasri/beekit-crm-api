@@ -3,10 +3,7 @@ import { ProviderName } from '@core/constants/provider-name.enum'
 import { CardRegistrationService } from '@domains/card/services/card-registration.service'
 import { IRabbitCardRegistrationService } from '@domains/card/interfaces/service.interface'
 import { IErrorFactory } from '@core/factories/error/interfaces/error.factory.interface'
-import {
-    IListRegisteredCardsUseCase,
-    IRegisterNewRabbitCardUseCase,
-} from '@domains/card/interfaces/use-case.interface'
+import { IUseCase } from '@shared/interfaces/use-case.interface'
 
 export const serviceProviders: Provider[] = [
     {
@@ -15,16 +12,19 @@ export const serviceProviders: Provider[] = [
             ProviderName.ERROR_FACTORY_SERVICE,
             ProviderName.USE_CASE_REGISTER_RABBIT_CARD,
             ProviderName.USE_CASE_LIST_CARDS,
+            ProviderName.USE_CASE_UNREGISTER_CARD,
         ],
         useFactory: (
             efs: IErrorFactory,
-            registerUseCase: IRegisterNewRabbitCardUseCase,
-            listCardUseCase: IListRegisteredCardsUseCase,
+            registerUseCase: IUseCase<any, any>,
+            listCardUseCase: IUseCase<any, any>,
+            unregisterUseCase: IUseCase<any, any>,
         ): IRabbitCardRegistrationService => {
             return new CardRegistrationService(
                 efs,
                 registerUseCase,
                 listCardUseCase,
+                unregisterUseCase,
             )
         }
     },

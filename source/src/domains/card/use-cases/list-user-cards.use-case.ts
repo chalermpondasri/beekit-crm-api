@@ -1,4 +1,3 @@
-import { IListRegisteredCardsUseCase } from '@domains/card/interfaces/use-case.interface'
 import {
     map,
     mergeMap,
@@ -8,8 +7,9 @@ import {
 import { ICardRepository } from '@shared/repositories/interfaces/card.repository.interface'
 import { HasherService } from '@utils/hasher.service'
 import { CardOutput } from '@domains/card/use-cases/input-output/card.output'
+import { IUseCase } from '@shared/interfaces/use-case.interface'
 
-export class ListUserCardsUseCase implements IListRegisteredCardsUseCase {
+export class ListUserCardsUseCase implements IUseCase<string, CardOutput> {
     public constructor(
         private readonly _cardRepository: ICardRepository,
     ) {}
