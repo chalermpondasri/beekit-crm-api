@@ -9,6 +9,10 @@ import {
     of,
 } from 'rxjs'
 import { IGetUserAcceptedTermUseCase } from '@domains/tos/interfaces/use-case.interface'
+import {
+    parseBuddhistDate,
+    parseThaiDate,
+} from '@utils/thai-date-parser/thai-date-parser'
 
 export class RequestContextService  implements IRequestContextService {
     private _userContext: UserContext
@@ -69,5 +73,9 @@ export class RequestContextService  implements IRequestContextService {
                 return  result
             })
         )
+    }
+
+    public getBirthDate(): Date {
+        return parseBuddhistDate(this._userContext.dateOfBirth)
     }
 }

@@ -10,6 +10,7 @@ export interface IRequestContextService {
     getTraceId(): string
     getTimestamp(): number
     getHrTime(): bigint
+    getBirthDate(): Date
     validated: boolean
     isValid: boolean
 }

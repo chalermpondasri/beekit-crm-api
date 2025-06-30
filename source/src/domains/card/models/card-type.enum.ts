@@ -1,5 +1,5 @@
 export enum TransitCardType {
-    RABBIT = 'RABBIT',
+    ABT = 'ABT',
     EMV = 'EMV',
 }
 

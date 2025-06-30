@@ -23,14 +23,14 @@ export class ValidateRabbitCardRegistrationUseCase implements IValidateRabbitCar
         return this._checkIfUserAlreadyHasRabbitCardRegistered(citizenId, new ValidateRabbitOutput()).pipe(
             mergeMap(result => {
                 if(result.citizenAlreadyHasCard) {
-                    return throwError(() => new CitizenHasCardException(citizenId, TransitCardType.RABBIT))
+                    return throwError(() => new CitizenHasCardException(citizenId, TransitCardType.ABT))
                 }
 
                 return this._checkIfCardWasRegistered(cardNumber, result)
             }),
             mergeMap(result => {
                 if(result.cardAlreadyRegistered) {
-                    return throwError(() => new CardRegisteredException(cardNumber, TransitCardType.RABBIT))
+                    return throwError(() => new CardRegisteredException(cardNumber, TransitCardType.ABT))
                 }
                 return of(result)
             }),
@@ -52,7 +52,7 @@ export class ValidateRabbitCardRegistrationUseCase implements IValidateRabbitCar
         return of(HasherService.hashSha256toBase64Url(cardNumber)).pipe(
             mergeMap(hashedCardNumber => this._cardRepository.findOne({
                 hashedCardNumber,
-                cardType: TransitCardType.RABBIT,
+                cardType: TransitCardType.ABT,
             })),
             map(registeredData => {
                 result = result ? result : new ValidateRabbitOutput()
