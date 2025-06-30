@@ -17,6 +17,11 @@ export const parseThaiDate = (thaiDate: string, thaiTime: string): Date => {
     return dayjs(`${thaiDate} ${thaiTime} +0700`, 'DD/MM/YYYY HH:mm ZZ').toDate()
 }
 
+/**
+ * transform buddhism date into date
+ * @param thaiDate eg. 18/07/2527
+ * @param thaiTime eg. 14:30
+ */
 export const parseBuddhistDate = (thaiDate: string, thaiTime: string = '00:00'): Date => {
     if(!thaiDate) {
         return null

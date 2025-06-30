@@ -1,8 +1,7 @@
 import { MainModule } from '@modules/main.module'
 import { NestFactory } from '@nestjs/core'
-import { GlobalExceptionFilter } from '@common/filters/global-exception.filter'
-import { EnvironmentConfig } from '@common/models/environment-config.model'
-import { ProviderName } from '@constants/provider-name.enum'
+import { EnvironmentConfig } from '@core/models/environment-config.model'
+import { ProviderName } from '@core/constants/provider-name.enum'
 import {
     PipeTransform,
     ValidationPipe,
@@ -12,10 +11,11 @@ import {
     SwaggerModule,
 } from '@nestjs/swagger'
 import { apiReference } from '@scalar/nestjs-api-reference'
-import { ErrorDto } from '@common/models/error.model'
-import { ILoggerService } from '@domains/services/interfaces/logger.service.interface'
+import { ErrorDto } from '@core/models/errors/error.model'
+import { ILoggerService } from '@core/interfaces/logger.service.interface'
+import { NoContentInterceptor } from '@core/interceptors/no-content.interceptor'
 
-(async function () {
+async function bootstrap() {
     const app = await NestFactory.create(MainModule, {
         cors: true,
         bufferLogs: true,
@@ -26,7 +26,6 @@ import { ILoggerService } from '@domains/services/interfaces/logger.service.inte
     const envConfig: EnvironmentConfig = app.get(ProviderName.ENVIRONMENT_CONFIG)
     const logger = await app.resolve<ILoggerService>(ProviderName.LOGGER_SERVICE)
 
-    app.useGlobalFilters(new GlobalExceptionFilter(logger))
     app.useLogger(logger)
 
     const nestValidationPipes: PipeTransform[] = [
@@ -36,13 +35,14 @@ import { ILoggerService } from '@domains/services/interfaces/logger.service.inte
     ]
     app.setGlobalPrefix(envConfig.APP_PREFIX)
     app.useGlobalPipes(...nestValidationPipes)
+    app.useGlobalInterceptors(new NoContentInterceptor())
     app.enableShutdownHooks()
 
     if (envConfig.APP_ENV !== 'production') {
         const config = new DocumentBuilder()
             .setTitle(envConfig.APP_NAME)
             .setVersion(envConfig.APP_VERSION)
-            .addBearerAuth()
+            .addBearerAuth({in: 'header', type: 'http', scheme: 'bearer', bearerFormat: 'JWT'}, 'access-token')
             .build()
 
         const documentFactory = () => SwaggerModule.createDocument(
@@ -70,8 +70,13 @@ import { ILoggerService } from '@domains/services/interfaces/logger.service.inte
     }
 
     const port = envConfig.APP_PORT || 3000
-    await app.listen(port)
 
-    logger.setContext('NestApplication').log(`Application is running on: ${await app.getUrl()}`)
+    try {
+        await app.listen(port)
+        logger.setContext('NestApplication').log(`Application is running on: ${await app.getUrl()}`)
+    } catch (e) {
+        console.error(e)
+    }
 
-})()
+}
+bootstrap()
