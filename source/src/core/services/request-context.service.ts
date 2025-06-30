@@ -11,7 +11,6 @@ import {
 import { IGetUserAcceptedTermUseCase } from '@domains/tos/interfaces/use-case.interface'
 import {
     parseBuddhistDate,
-    parseThaiDate,
 } from '@utils/thai-date-parser/thai-date-parser'
 
 export class RequestContextService  implements IRequestContextService {
