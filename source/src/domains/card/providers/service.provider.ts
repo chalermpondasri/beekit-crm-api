@@ -13,18 +13,21 @@ export const serviceProviders: Provider[] = [
             ProviderName.USE_CASE_REGISTER_RABBIT_CARD,
             ProviderName.USE_CASE_LIST_CARDS,
             ProviderName.USE_CASE_UNREGISTER_CARD,
+            ProviderName.USE_CASE_REGISTER_EMV_CARD,
         ],
         useFactory: (
             efs: IErrorFactory,
             registerUseCase: IUseCase<any, any>,
             listCardUseCase: IUseCase<any, any>,
             unregisterUseCase: IUseCase<any, any>,
+            registerEmvCardUseCase: IUseCase<any, any>,
         ): IRabbitCardRegistrationService => {
             return new CardRegistrationService(
                 efs,
                 registerUseCase,
                 listCardUseCase,
                 unregisterUseCase,
+                registerEmvCardUseCase,
             )
         }
     },

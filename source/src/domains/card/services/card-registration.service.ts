@@ -8,7 +8,6 @@ import {
     throwError,
     toArray,
 } from 'rxjs'
-import { InternalServerErrorException } from '@nestjs/common'
 import { RegisterCardCommandWithOptions } from '@domains/card/command-query/register-card.command'
 import { IErrorFactory } from '@core/factories/error/interfaces/error.factory.interface'
 import { ApplicationErrorCode } from '@core/constants/error-code.enum'
@@ -23,13 +22,17 @@ import { RegisterRabbitCardInput } from '@domains/card/use-cases/input-output/re
 import { CardOutput } from '@domains/card/use-cases/input-output/card.output'
 import { UnregisterCardInput } from '@domains/card/use-cases/input-output/unregister-card.input'
 import { CardNotFoundException } from '@core/models/errors/card/card-not-found.exception'
+import { RegisterEmvCardInput } from '@domains/card/use-cases/input-output/register-emv-card.input'
+import { RegisterEmvCardOutput } from '@domains/card/use-cases/input-output/register-emv-card.output'
+import { EmvRegisterResponse } from '@domains/card/response/emv-register.response'
 
 export class CardRegistrationService implements ICardRegistrationService {
     public constructor(
         private readonly _errorFactory: IErrorFactory,
         private readonly _registerRabbitUseCase: IUseCase<RegisterRabbitCardInput, any>,
         private readonly _listCardUseCase: IUseCase<string, CardOutput>,
-        private readonly _unregisterCardUseCase: IUseCase<UnregisterCardInput, any>
+        private readonly _unregisterCardUseCase: IUseCase<UnregisterCardInput, any>,
+        private readonly _registerEmvCardUseCase: IUseCase<RegisterEmvCardInput, RegisterEmvCardOutput>,
     ) {
     }
 
@@ -50,8 +53,30 @@ export class CardRegistrationService implements ICardRegistrationService {
         )
     }
 
-    public registerEmvCard(psnId: string, command: RegisterCardCommandWithOptions): Observable<any> {
-        throw new InternalServerErrorException('not implemented')
+    public registerEmvCard( citizenId: string, command: RegisterCardCommandWithOptions): Observable<EmvRegisterResponse> {
+        return this._registerEmvCardUseCase.execute({
+            birthDate: command.birthDate,
+            cardNumber: command.cardNumber,
+            citizenId: citizenId,
+        }).pipe(
+            map(result => {
+                return new EmvRegisterResponse({
+                    reference1: result.reference1,
+                    reference2: result.reference2,
+                    transactionId: result.transactionId
+
+                })
+            } ),
+            catchError(err => {
+                if (err instanceof CardRegisteredException) {
+                    return throwError(() => this._errorFactory.createBadRequestError(ApplicationErrorCode.CARD_WAS_REGISTERED))
+                }
+                if (err instanceof CitizenHasCardException) {
+                    return throwError(() => this._errorFactory.createBadRequestError(ApplicationErrorCode.CARD_MAX_TYPE_ALLOWED))
+                }
+                return throwError(() => this._errorFactory.createInternalServerError(ApplicationErrorCode.INTERNAL_SERVER_ERROR))
+            }),
+        )
     }
 
     public registerRabbitCard(psnId: string, command: RegisterCardCommandWithOptions): Observable<any> {

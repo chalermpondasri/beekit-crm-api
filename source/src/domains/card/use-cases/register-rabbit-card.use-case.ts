@@ -12,18 +12,12 @@ import {
 } from '@shared/adapters/interfaces/rabbit-transit.interface'
 import { ILoggerService } from '@core/interfaces/logger.service.interface'
 import { ICardRepository } from '@shared/repositories/interfaces/card.repository.interface'
-import { CardEntity } from '@shared/entities/card.entity'
-import {
-    CardRegistrationStatus,
-    TransitCardType,
-} from '@domains/card/models/card-type.enum'
-import { HasherService } from '@utils/hasher.service'
 import { rethrow } from '@nestjs/core/helpers/rethrow'
 import { ICchAdapter } from '@shared/adapters/interfaces/cch.adapter'
-import { toThaiBuddhistEraDateString } from '@utils/thai-date-parser/thai-date-parser'
 import { IUseCase } from '@shared/interfaces/use-case.interface'
 import { ValidateRabbitInput } from '@domains/card/use-cases/input-output/validate-rabbit.input'
 import { ValidateRabbitOutput } from '@domains/card/use-cases/input-output/validate-rabbit.output'
+import { CardFactory } from '@shared/factories/card.factory'
 
 export class RegisterNewRabbitCardUseCase implements IUseCase<RegisterRabbitCardInput, any> {
     public constructor(
@@ -35,8 +29,12 @@ export class RegisterNewRabbitCardUseCase implements IUseCase<RegisterRabbitCard
     ) {
         this._logger.setContext(RegisterNewRabbitCardUseCase.name)
     }
+
     public execute(input: RegisterRabbitCardInput): Observable<any> {
-        return this._validateUseCase.execute(new ValidateRabbitInput({citizenId: input.citizenId, cardNumber: input.cardId})).pipe(
+        return this._validateUseCase.execute(new ValidateRabbitInput({
+            citizenId: input.citizenId,
+            cardNumber: input.cardId,
+        })).pipe(
             mergeMap(() => {
                 return this._rabbitTransitAdapter.registerSelectedCard({
                     cardId: input.cardId,
@@ -46,23 +44,17 @@ export class RegisterNewRabbitCardUseCase implements IUseCase<RegisterRabbitCard
             catchError(err => {
                 this._logger.error(err)
                 return rethrow(err)
-            })
+            }),
         ).pipe(
             mergeMap(result => of(result).pipe(
-
                 mergeMap(result => {
-                    const birthYear =  toThaiBuddhistEraDateString(input.birthDate).split('/').pop()
-                    const card = new CardEntity()
+                    const card = CardFactory.createABTCard({
+                        birthDate: input.birthDate,
+                        cardNumber: result.cardId,
+                        citizenId: input.citizenId,
+                        tokenizedMedia: result.transitToken,
 
-                    card.cardType = TransitCardType.ABT
-                    card.cardNo = result.cardId
-                    card.hashedCardNumber = HasherService.hashSha256toBase64Url(result.cardId)
-                    card.cid = HasherService.hashSha256toBase64Url(input.citizenId)
-                    card.registeredDate = new Date()
-                    card.tokenizedMedia = {rabbit: result.transitToken ,ktb: null, bem: null}
-                    card.registrationStatus = CardRegistrationStatus.COMPLETED
-                    card.birthYear = Number(birthYear)
-
+                    })
                     return this._cardRepository.save(card)
                 }),
                 catchError(err => {
@@ -75,9 +67,9 @@ export class RegisterNewRabbitCardUseCase implements IUseCase<RegisterRabbitCard
                         campaignRegisterStatus: CampaignRegisterStatus.UNREGISTERED,
                         campaignBlockStatus: CampaignBlockStatus.NOT_BLOCK,
                     }).pipe(
-                        mergeMap(() => rethrow(err))
+                        mergeMap(() => rethrow(err)),
                     )
-                })
+                }),
             )),
         )
     }
