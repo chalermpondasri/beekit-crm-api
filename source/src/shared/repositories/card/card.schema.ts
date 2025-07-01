@@ -13,4 +13,5 @@ export interface ICardSchema extends ISchema {
     birthYear: number
     registeredDate: Date
     registrationStatus: CardRegistrationStatus
+    transactionId: string
 }

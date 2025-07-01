@@ -62,28 +62,54 @@ export const repositoryProviders: Provider[] = [
                 const indexDescriptions: IndexDescription[] = [
                     {
                         key: {
+                            deletedAt: 1,
                             cid: 1,
+                            cardType: 1
                         },
+                        partialFilterExpression: { deletedAt: null },
+                        name: 'idx_active_cid_cardtype',
                     },
                     {
                         key: {
+                            deletedAt: 1,
                             hashedCardNumber: 1,
+                            cardType: 1
                         },
+                        partialFilterExpression: { deletedAt: null },
+                        name: 'idx_active_hashedcard_cardtype',
                     },
                     {
                         key: {
+                            deletedAt: 1,
+                            transactionId: 1,
+                        },
+                        unique: true,
+                        partialFilterExpression: { deletedAt: null, transactionId: { $exists: true} },
+                        name: 'idx_uniq_active_transaction'
+                    },
+                    {
+                        key: {
+                            deletedAt: 1,
                             tokenizedMediaIdRabbit: 1,
                         },
+                        partialFilterExpression: { deletedAt: null },
+                        name: 'idx_active_tokenized_rabbit',
                     },
                     {
                         key: {
+                            deletedAt: 1,
                             tokenizedMediaIdBem: 1,
                         },
+                        partialFilterExpression: { deletedAt: null },
+                        name: 'idx_active_tokenized_bem',
                     },
                     {
                         key: {
+                            deletedAt: 1,
                             tokenizedMediaIdKtb: 1,
                         },
+                        partialFilterExpression: { deletedAt: null },
+                        name: 'idx_active_tokenized_ktb',
                     },
                 ]
                 await context.collection.createIndexes(indexDescriptions)
