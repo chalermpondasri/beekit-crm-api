@@ -20,13 +20,15 @@ import {
     exports: [
         databaseProvider,
         mongoClientProvider,
-    ]
+    ],
 })
-export class DatabaseModule implements OnModuleDestroy{
+export class DatabaseModule implements OnModuleDestroy {
     public constructor(
-        private readonly _moduleRef: ModuleRef
-    ) {}
-    async onModuleDestroy() {
+        private readonly _moduleRef: ModuleRef,
+    ) {
+    }
+
+    public async onModuleDestroy() {
         const client = await this._moduleRef.resolve<MongoClient>(ProviderName.MONGO_CLIENT)
         client.close()
     }
