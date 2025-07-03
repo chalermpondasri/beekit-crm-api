@@ -1,12 +1,13 @@
 import {Module} from '@nestjs/common'
-import {cacheServiceProvider} from '@core/providers/cache-service.provider'
+import { cacheServiceProvider, keyvRedisProvider } from '@core/providers/cache-service.provider'
 
 @Module({
     providers: [
-        cacheServiceProvider,
+        keyvRedisProvider,
+        ...cacheServiceProvider,
     ],
     exports: [
-        cacheServiceProvider,
+        ...cacheServiceProvider,
     ],
 })
 export class CacheModule {
