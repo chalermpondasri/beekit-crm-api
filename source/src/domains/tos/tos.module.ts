@@ -4,7 +4,7 @@ import { RepositoryModule } from '@shared/repositories/repository.module'
 import { TermController } from '@domains/tos/controllers/term.controller'
 import { serviceProviders } from '@domains/tos/providers/service.provider'
 import { TokenizationModule } from '@domains/auth/tokenization.module'
-import { CacheModule } from '@core/cache.module'
+import { CacheModule } from '@core/modules/cache.module'
 
 @Module({
     imports: [

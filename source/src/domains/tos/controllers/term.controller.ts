@@ -33,7 +33,7 @@ export class TermController {
     @ApiBearerAuth()
     @ApiOperation({
         summary: `Query user accepted term version`,
-        description: `Check if user has accepted current term version and latest version.`
+        description: `Check if user has accepted current term version and latest version.`,
     })
     @ApiResponse({type: UserAcceptedTermResponse, status: 200})
     @UseGuards(CitizenIdGuard)
@@ -45,14 +45,14 @@ export class TermController {
     @ApiBearerAuth()
     @ApiOperation({
         summary: `user accepted term version`,
-        description: `user accepted term version.`
+        description: `user accepted term version.`,
     })
     @ApiResponse({example: {success: true}, status: 200})
     @UseGuards(CitizenIdGuard)
     @HttpCode(200)
     @Post('/accept')
     public updateUserTerm(
-        @Body() command: UpdateUserTermCommand
+        @Body() command: UpdateUserTermCommand,
     ) {
         return this._termOfService.updateUserTerm(this._requestContextService.getPsnId(), command)
     }

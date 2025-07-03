@@ -3,7 +3,7 @@ import {
     entityMappers,
     repositoryProviders,
 } from '@shared/repositories/repository.provider'
-import { DatabaseModule } from '@core/database.module'
+import { DatabaseModule } from '@core/modules/database.module'
 
 @Module({
     imports: [

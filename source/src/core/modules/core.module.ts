@@ -3,9 +3,9 @@ import {
     Module,
     Scope,
 } from '@nestjs/common'
-import { environmentConfigProvider } from './providers/config.provider'
-import { errorFactoryServiceProvider } from './providers/error-factory.provider'
-import { requestContextServiceProvider } from './providers/request-context-service.provider'
+import { environmentConfigProvider } from '../providers/config.provider'
+import { errorFactoryServiceProvider } from '../providers/error-factory.provider'
+import { requestContextServiceProvider } from '../providers/request-context-service.provider'
 import { APP_INTERCEPTOR } from '@nestjs/core'
 import {
     accessLoggerServiceProvider,
@@ -14,6 +14,7 @@ import {
 import { TokenizationModule } from '@domains/auth/tokenization.module'
 import { AccessRequestInterceptor } from '@core/interceptors/access-request.interceptor'
 import { TosModule } from '@domains/tos/tos.module'
+import { encryptionServiceProvider } from '@core/providers/encryption-service.provider'
 
 @Global()
 @Module({
@@ -32,6 +33,7 @@ import { TosModule } from '@domains/tos/tos.module'
             scope: Scope.REQUEST,
             useClass: AccessRequestInterceptor,
         },
+        encryptionServiceProvider,
     ],
     exports: [
         requestContextServiceProvider,
@@ -39,6 +41,7 @@ import { TosModule } from '@domains/tos/tos.module'
         errorFactoryServiceProvider,
         loggerServiceProvider,
         accessLoggerServiceProvider,
+        encryptionServiceProvider,
     ],
 })
 export class CoreModule {

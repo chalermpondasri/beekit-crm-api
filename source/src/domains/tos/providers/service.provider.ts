@@ -1,4 +1,4 @@
-import { Provider } from "@nestjs/common";
+import { Provider } from '@nestjs/common'
 import { ProviderName } from '@core/constants/provider-name.enum'
 import { EnvironmentConfig } from '@core/models/environment-config.model'
 import {
@@ -33,7 +33,7 @@ export const serviceProviders: Provider[] = [
                 updateUserTermUseCase,
                 cacheService,
             )
-        }
+        },
 
-    }
+    },
 ]

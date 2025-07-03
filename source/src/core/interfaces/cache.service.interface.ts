@@ -1,7 +1,5 @@
 import ms from 'ms'
 import { Observable } from 'rxjs'
-
-
 export interface ISetOptions {
     ttl?: ms.StringValue
     /**
