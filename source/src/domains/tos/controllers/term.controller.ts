@@ -29,7 +29,6 @@ export class TermController {
     ) {
     }
 
-
     @ApiBearerAuth()
     @ApiOperation({
         summary: `Query user accepted term version`,
