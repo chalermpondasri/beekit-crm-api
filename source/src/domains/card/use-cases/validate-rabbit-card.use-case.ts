@@ -41,7 +41,7 @@ export class ValidateRabbitCardRegistrationUseCase implements IUseCase<ValidateR
 
     private _checkIfUserAlreadyHasRabbitCardRegistered(citizenId: string, result?: ValidateRabbitOutput): Observable<ValidateRabbitOutput> {
         return of(HasherService.hashSha256toBase64Url(citizenId)).pipe(
-            mergeMap(hashedId => this._cardRepository.findOne({cid: hashedId})),
+            mergeMap(hashedId => this._cardRepository.findOne({cid: hashedId, cardType: TransitCardType.ABT})),
             map(registeredData => {
                 result = result ? result : new ValidateRabbitOutput()
                 result.citizenAlreadyHasCard = !!registeredData

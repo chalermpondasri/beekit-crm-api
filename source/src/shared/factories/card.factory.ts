@@ -29,6 +29,11 @@ export class CardFactory {
         entity.transactionId = HasherService.generateTransactionIdAsBase64Url()
         entity.birthYear = this._getBirthYear(input.birthDate)
         entity.registeredDate = new Date()
+        entity.cardNo = [
+            input.cardNumber.substring(0,4),
+            'xxxxxxxx',
+            input.cardNumber.substring(12,16),
+        ].join('')
 
         return entity
     }

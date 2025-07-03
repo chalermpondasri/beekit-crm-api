@@ -33,7 +33,6 @@ export class RabbitTransitAdapter implements IRabbitTransitAdapter {
         this._httpClient.interceptors.request.use((request) => {
             const nonce = crypto.randomBytes(16).toString('base64')
 
-
             let params: string
             if (request.method === 'get' || request.method === 'delete') {
                 params = qs.stringify(request.params)
@@ -58,7 +57,7 @@ export class RabbitTransitAdapter implements IRabbitTransitAdapter {
 
     public getCardList(citizenId: string): Observable<IGetCardListResponse> {
         return of(this._transformCitizenId(citizenId)).pipe(
-            mergeMap(cid => this._httpClient.post(`/cards/list`, {id_no: cid})),
+            mergeMap( async (cid) => this._httpClient.post(`/cards/list`, {id_no: cid})),
             map(({data}) => {
                 const response: IGetCardListResponse = {
                     cards: data.card_list?.map(card => {
@@ -85,7 +84,7 @@ export class RabbitTransitAdapter implements IRabbitTransitAdapter {
                 id_no: this._transformCitizenId(input.citizenId),
                 card_id_register: selectedCard.cardId,
             })),
-            mergeMap(data => this._httpClient.post(`/cards`, data)),
+            mergeMap(async (data) => this._httpClient.post(`/cards`, data)),
             map(({data}) => {
                 const {card_info} = data
                 const response: ICardResponse = {
@@ -116,7 +115,7 @@ export class RabbitTransitAdapter implements IRabbitTransitAdapter {
                     campaign_block_status: card.campaignBlockStatus,
                 }
             }),
-            mergeMap(data => this._httpClient.put(`/cards`, data)),
+            mergeMap(async (data) => this._httpClient.put(`/cards`, data)),
             map(({data}) => {
                 const {card_info} = data
                 const response: ICardResponse = {

@@ -5,12 +5,14 @@ import { serviceProviders } from '@domains/card/providers/service.provider'
 import { useCaseProviders } from '@domains/card/providers/use-case.provider'
 import { RepositoryModule } from '@shared/repositories/repository.module'
 import { AdapterModule } from '@shared/adapters/adapter.module'
+import { CacheModule } from '@core/modules/cache.module'
 
 @Module({
     imports: [
         TokenizationModule,
         RepositoryModule,
         AdapterModule,
+        CacheModule,
     ],
     controllers: [
         CardController,
