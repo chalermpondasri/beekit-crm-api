@@ -56,14 +56,14 @@ export class TosService implements ITermOfServiceService {
                 const data: UserAcceptedTermResponse = {
                     isOk: result.isOk,
                     accepted: result.accepted,
-                    required: result.required
+                    required: result.required,
                 }
 
                 return plainToInstance(UserAcceptedTermResponse, data, {
                     exposeUnsetFields: true,
                     excludeExtraneousValues: true,
                 })
-            })
+            }),
         )
     }
 

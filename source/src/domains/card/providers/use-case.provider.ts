@@ -9,6 +9,8 @@ import { ICchAdapter } from '@shared/adapters/interfaces/cch.adapter'
 import { ListUserCardsUseCase } from '@domains/card/use-cases/list-user-cards.use-case'
 import { IUseCase } from '@shared/interfaces/use-case.interface'
 import { UnregisterCardUseCase } from '@domains/card/use-cases/unregister-card.use-case'
+import { ValidateEmvCardUseCase } from '@domains/card/use-cases/validate-emv-card.use-case'
+import { RegisterEmvCardUseCase } from '@domains/card/use-cases/register-emv-card.use-case'
 
 export const useCaseProviders: Provider[] = [
     {
@@ -72,6 +74,35 @@ export const useCaseProviders: Provider[] = [
             return new UnregisterCardUseCase(
                 cardRepository,
                 rabbitTransitAdapter,
+            )
+        }
+    },
+    {
+        provide: ProviderName.USE_CASE_VALIDATE_EMV_CARD,
+        inject: [
+            ProviderName.CARD_REPOSITORY,
+        ],
+        useFactory: (
+            cardRepository: ICardRepository,
+        ) => {
+            return new ValidateEmvCardUseCase(
+                cardRepository,
+            )
+        }
+    },
+    {
+        provide: ProviderName.USE_CASE_REGISTER_EMV_CARD,
+        inject: [
+            ProviderName.USE_CASE_VALIDATE_EMV_CARD,
+            ProviderName.CARD_REPOSITORY,
+        ],
+        useFactory: (
+            validateEmvUseCase: IUseCase<any, any>,
+            cardRepository: ICardRepository,
+        ) => {
+            return new RegisterEmvCardUseCase(
+                validateEmvUseCase,
+                cardRepository,
             )
         }
     }

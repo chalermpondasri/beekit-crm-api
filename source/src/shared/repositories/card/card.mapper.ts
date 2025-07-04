@@ -25,6 +25,7 @@ export class CardEntityMapper implements IRepositoryMapper<CardEntity, ICardSche
             },
             updatedAt: schema.updatedAt,
             registrationStatus: schema.registrationStatus,
+            transactionId: schema.transactionId,
         }
 
         return plainToInstance(CardEntity, entitySchema)
@@ -46,6 +47,7 @@ export class CardEntityMapper implements IRepositoryMapper<CardEntity, ICardSche
             updatedAt: model.updatedAt,
             deletedAt: model.deletedAt,
             registrationStatus: model.registrationStatus,
+            transactionId: model.transactionId,
         }
     }
 

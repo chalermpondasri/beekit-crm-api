@@ -10,7 +10,7 @@ export class CardEntity extends AbstractEntity {
     public hashedCardNumber: string
     public cardType: TransitCardType
     public registrationStatus: CardRegistrationStatus
-
+    public transactionId: string
     public tokenizedMedia: {
         rabbit: string
         ktb: string

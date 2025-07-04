@@ -47,3 +47,4 @@ source/.env
 .eslintcache
 
 /tmp
+/.clinic/
