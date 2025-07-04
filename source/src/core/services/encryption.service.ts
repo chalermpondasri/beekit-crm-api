@@ -10,7 +10,7 @@ export class EncryptionService implements IEncryptionService {
             this._key = crypto.scryptSync(secret, salt, 32)
         } else {
             // Assume secret is already a base64url-encoded 32-byte key
-            this._key = Buffer.from(secret, 'utf8')
+            this._key = Buffer.from(secret, 'base64url')
             if (this._key.length !== 32) {
                 throw new Error('Secret must be exactly 32 bytes when encoded as base64url')
             }

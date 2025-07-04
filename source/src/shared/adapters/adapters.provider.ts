@@ -5,10 +5,6 @@ import {
 import { ProviderName } from '@core/constants/provider-name.enum'
 import axios, { AxiosInstance } from 'axios'
 import http from 'http'
-import { EnvironmentConfig } from '@core/models/environment-config.model'
-import { ILoggerService } from '@core/interfaces/logger.service.interface'
-import { EGovAdapter } from './egov/egov.adapter'
-import { RabbitTransitAdapter } from '@shared/adapters/rabbit/rabbit-transit.adapter'
 
 export const httpClientProvider: Provider = {
     provide: ProviderName.HTTP_CLIENT,
@@ -19,49 +15,5 @@ export const httpClientProvider: Provider = {
             httpAgent: agent,
         })
     },
-}
-
-export const eGovAdapterProvider: Provider = {
-    provide: ProviderName.EGOV_ADAPTER,
-    inject: [
-        ProviderName.HTTP_CLIENT,
-        ProviderName.ENVIRONMENT_CONFIG,
-        ProviderName.LOGGER_SERVICE,
-    ],
-    useFactory: (
-        httpClient: AxiosInstance,
-        config: EnvironmentConfig,
-        logger: ILoggerService,
-    ) => {
-
-        return new EGovAdapter(
-            httpClient,
-            config.EGOV_CONSUMER_KEY,
-            config.EGOV_CONSUMER_SECRET,
-            config.EGOV_DEFAULT_AGENT_ID,
-            config.EGOV_TOKEN_URL,
-            config.EGOV_VERIFY_MTOKEN_URL,
-            logger.setContext(ProviderName.EGOV_ADAPTER),
-        )
-    },
-}
-
-export const rabbitTransitAdapterProvider: Provider = {
-    provide: ProviderName.RABBIT_TRANSIT_ADAPTER,
-    inject: [
-        ProviderName.HTTP_CLIENT,
-        ProviderName.ENVIRONMENT_CONFIG,
-    ],
-    useFactory: (
-        client: AxiosInstance,
-        config: EnvironmentConfig,
-    ) => {
-        client.defaults.baseURL = config.RABBIT_BASE_URL
-
-        return new RabbitTransitAdapter(
-            client,
-            config.RABBIT_SECRET,
-        )
-    }
 }
 

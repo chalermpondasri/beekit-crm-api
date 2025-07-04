@@ -11,8 +11,7 @@ export const encryptionServiceProvider: Provider = {
     useFactory: (config: EnvironmentConfig) => {
 
         return new EncryptionService(
-            config.APP_ID,
-            config.EGOV_CONSUMER_SECRET,
+            'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
         )
     },
 }

@@ -10,9 +10,7 @@ import { exceptionFilters } from '@core/providers/filters.provider'
 import { RepositoryModule } from '@shared/repositories/repository.module'
 import { TokenizationModule } from '@domains/auth/tokenization.module'
 import { TosModule } from '@domains/tos/tos.module'
-import { CardModule } from '@domains/card/card.module'
 import { RequestContextMiddleware } from '@core/middlewares/request-context.middleware'
-import { TestModule } from '@domains/test/test.module'
 
 @Module({
     imports: [
@@ -21,9 +19,7 @@ import { TestModule } from '@domains/test/test.module'
         HealthcheckModule,
         AuthModule,
         RepositoryModule,
-        TestModule,
         TosModule,
-        CardModule,
     ],
     providers: [
         ...exceptionFilters,

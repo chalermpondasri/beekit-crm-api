@@ -59,6 +59,7 @@ module.exports = {
     "@typescript-eslint/promise-function-async": "error",
     "@typescript-eslint/switch-exhaustiveness-check": "error",
     "@typescript-eslint/no-throw-literal": "off",
-    "no-multiple-empty-lines": ["error", { "max": 1 }]
+    "no-multiple-empty-lines": ["error", { "max": 1 }],
+    "@typescript-eslint/no-unused-vars": "warn",
   }
 };

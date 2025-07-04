@@ -56,19 +56,6 @@ export class EnvironmentConfig {
     public readonly JWT_REFRESH_TOKEN_TTL: string
 
     @IsNotEmpty()
-    public readonly EGOV_TOKEN_URL: string
-
-    @IsNotEmpty()
-    public readonly EGOV_VERIFY_MTOKEN_URL: string
-
-    @IsNotEmpty()
-    public readonly EGOV_CONSUMER_KEY: string
-    @IsNotEmpty()
-    public readonly EGOV_CONSUMER_SECRET: string
-    @IsNotEmpty()
-    public readonly EGOV_DEFAULT_AGENT_ID: string
-
-    @IsNotEmpty()
     public readonly DB_PROTOCOL: string
     @IsNotEmpty()
     public readonly DB_HOSTS: string
@@ -93,11 +80,6 @@ export class EnvironmentConfig {
     @IsNumber()
     @Transform(({ value }) => Number(value))
     public readonly POD_TO_SCALE: number
-
-    @IsNotEmpty()
-    public readonly RABBIT_SECRET: string
-    @IsNotEmpty()
-    public readonly RABBIT_BASE_URL: string
 
     public isProduction() {
         return this.APP_ENV === 'production'

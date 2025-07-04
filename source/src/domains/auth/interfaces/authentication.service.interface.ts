@@ -1,7 +1,7 @@
+import { RegisterCommand } from '@domains/auth/command-query/register.command'
 import { Observable } from 'rxjs'
-import { AuthenticationResponse } from '@domains/auth/response/authentication.response'
-import { AuthenticationCommand } from '@domains/auth/command-query/authentication.command'
+import { RegisterResponse } from '@domains/auth/response/register.response'
 
 export interface IAuthenticationService {
-    authenticate(command: AuthenticationCommand): Observable<AuthenticationResponse>
+    register(command: RegisterCommand): Observable<RegisterResponse>
 }
